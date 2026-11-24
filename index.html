@@ -89,6 +89,9 @@
       font-size: 13px;
       font-weight: 700;
     }
+    .hotline-banner {
+      display: none;
+    }
     .nav-wrap {
       background: #fff;
       border-bottom: 1px solid var(--line);
@@ -232,7 +235,7 @@
     }
     .stats-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       gap: 10px;
     }
     .stat-num {
@@ -382,7 +385,7 @@
     @media (max-width: 640px) {
       .hero h1 { font-size: 18px; }
       .skills-grid { grid-template-columns: 1fr; }
-      .stats-grid { grid-template-columns: 1fr; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
     }
     :root {
       --green: #145da0;
@@ -405,9 +408,12 @@
     .hero {
       position: relative;
       overflow: hidden;
-      padding: 28px 16px 34px;
+      min-height: 220px;
+      padding: 48px 24px 48px;
+      width: 100%;
       background:
-        linear-gradient(115deg, rgba(5, 35, 72, .98), rgba(20, 93, 160, .94)),
+        linear-gradient(115deg, rgba(5, 35, 72, .18), rgba(20, 93, 160, .12)),
+        url("84e029e9-5834-48bd-9a77-b8a442ad11fd.jfif") center 48% / cover no-repeat,
         #092f5b;
       text-align: left;
     }
@@ -432,11 +438,12 @@
       letter-spacing: .8px;
     }
     .hero-head {
-      max-width: 980px;
+      max-width: none;
       gap: 18px;
       justify-content: flex-start;
       position: relative;
       z-index: 1;
+      margin: -80px auto 0 0;
     }
     .emblem {
       width: 78px;
@@ -456,8 +463,8 @@
       transform: scale(1.08);
     }
     .unit-avatar {
-      width: 78px;
-      height: 78px;
+      width: 92px;
+      height: 92px;
       border-radius: 50%;
       border: 2px solid rgba(255,255,255,.92);
       background: #fff;
@@ -473,19 +480,22 @@
       display: block;
     }
     .hero h1 {
-      font-size: 26px;
+      font-size: 24px;
       line-height: 1.15;
       letter-spacing: 1px;
     }
     .hero p {
       margin-top: 7px;
-      font-size: 14px;
+      font-size: 12px;
       color: #dceafd;
     }
     .hotline {
-      display: flex;
+      position: absolute;
+      right: 16px;
+      bottom: 18px;
+      display: inline-flex;
       width: fit-content;
-      margin: 18px auto 0;
+      margin: 0;
       border: 1px solid #ffe49a;
       background: linear-gradient(90deg, #ffd45d, var(--gold));
       box-shadow: 0 8px 20px rgba(0,0,0,.16);
@@ -524,6 +534,25 @@
       background:
         linear-gradient(125deg, rgba(9,47,91,.97), rgba(20,93,160,.92)),
         #092f5b;
+    }
+    #map-feature {
+      cursor: pointer;
+      min-height: 196px;
+      padding: 28px 30px;
+      background:
+        linear-gradient(90deg, rgba(7,38,73,.96) 0%, rgba(9,47,91,.78) 58%, rgba(20,93,160,.25) 100%),
+        url("84e029e9-5834-48bd-9a77-b8a442ad11fd.jfif") center 42% / cover no-repeat;
+    }
+    #map-feature::after { display: none; }
+    #map-feature .map-feature-tag {
+      background: rgba(245,196,81,.16);
+      border: 1px solid rgba(245,196,81,.4);
+      color: #ffe49a;
+    }
+    #map-feature h2 { max-width: 680px; }
+    #map-feature p { max-width: 630px; }
+    #map-feature .btn-gold {
+      background: linear-gradient(90deg, #ffd45d, var(--gold));
     }
     .challenge-card::after {
       content: "CÔNG AN";
@@ -622,11 +651,18 @@
     }
     footer a { color: #ffe49a; }
     @media (max-width: 640px) {
-      .hero { text-align: center; }
-      .hero-head { justify-content: center; }
+      .hero { min-height: 190px; padding: 36px 12px 42px; text-align: center; }
+      .hero-head { justify-content: flex-start; margin: -36px 0 0; }
+      .hotline {
+        position: absolute;
+        right: 10px;
+        bottom: 10px;
+        font-size: 11px;
+        padding: 6px 10px;
+      }
       .emblem { width: 68px; height: 68px; }
-      .unit-avatar { width: 68px; height: 68px; }
-      .hero h1 { font-size: 19px; text-align: left; }
+      .unit-avatar { width: 76px; height: 76px; }
+      .hero h1 { font-size: 20px; text-align: left; }
       .challenge-card { padding: 24px 20px; }
       .challenge-card h2 { font-size: 21px; }
       .challenge-card::after { display: none; }
@@ -639,9 +675,6 @@
   <header class="hero" id="trang-chu">
     <div class="hero-badge">PHONG TRÀO BÌNH DÂN HỌC VỤ SỐ — XÃ BỜ NGOONG</div>
     <div class="hero-head">
-      <div class="emblem" aria-label="Huy hiệu Công an nhân dân">
-        <img src="Screenshot%202026-11-24%20123139.png" alt="Huy hiệu Công an nhân dân">
-      </div>
       <div class="unit-avatar" aria-label="Ảnh đại diện Công an xã Bờ Ngoong">
         <img src="84e029e9-5834-48bd-9a77-b8a442ad11fd.jfif" alt="Công an xã Bờ Ngoong">
       </div>
@@ -656,7 +689,7 @@
   <div class="nav-wrap">
     <nav class="nav-tabs" aria-label="Điều hướng chính">
       <a class="tab-btn active" href="#trang-chu">Trang chủ</a>
-      <a class="tab-btn" href="#thu-thach">Thử thách số</a>
+      <a class="tab-btn" href="#map-feature">Bản đồ số</a>
       <a class="tab-btn" href="contests.html">Cuộc thi</a>
       <a class="tab-btn" href="#ky-nang">4 Nhóm kỹ năng</a>
       <a class="tab-btn" href="#bai-viet">Cẩm nang &amp; Cảnh báo</a>
@@ -665,11 +698,11 @@
   </div>
 
   <main class="container">
-    <section class="card challenge-card" id="thu-thach">
-      <span class="pill-label">THỬ THÁCH CÔNG DÂN SỐ</span>
-      <h2>Mỗi người dân là một Công dân số gương mẫu</h2>
-      <p>Tham gia bộ câu hỏi tình huống thực tế nhận diện chiêu trò lừa đảo qua mạng và sử dụng VNeID an toàn.</p>
-      <button id="start-quiz-btn" class="btn-gold" type="button">Bắt đầu thử thách ngay (5 câu) →</button>
+    <section class="card challenge-card" id="map-feature">
+      <span class="pill-label map-feature-tag">BẢN ĐỒ SỐ BỜ NGOONG</span>
+      <h2>Tra cứu điểm phục vụ và dịch vụ công tại địa phương</h2>
+      <p>Xem nhà văn hóa thôn/làng, điểm hỗ trợ CCCD - VNeID và chỉ đường thuận tiện trên bản đồ số.</p>
+      <button id="open-map-feature" class="btn-gold" type="button">Mở Bản đồ số Bờ Ngoong →</button>
     </section>
 
     <section id="ky-nang">
@@ -711,6 +744,10 @@
           <div class="stat-num">VNeID</div>
           <div class="stat-label">Hỗ trợ định danh mức 2</div>
         </div>
+        <div>
+          <div class="stat-num gold" id="stat-participants">0</div>
+          <div class="stat-label">Người đã tham gia</div>
+        </div>
       </div>
     </section>
 
@@ -747,6 +784,13 @@
     (function () {
       var cfg = window.APP_CONFIG || {};
       document.getElementById('map-link').href = cfg.mapUrl || '#';
+      document.getElementById('open-map-feature').addEventListener('click', function () {
+        if (cfg.mapUrl) window.open(cfg.mapUrl, '_blank', 'noopener');
+      });
+      document.getElementById('map-feature').addEventListener('click', function (event) {
+        if (event.target.closest('button')) return;
+        if (cfg.mapUrl) window.open(cfg.mapUrl, '_blank', 'noopener');
+      });
 
       var modal = document.getElementById('info-modal');
       function openModal(tag, title, bodyHtml, imgUrl) {
@@ -827,6 +871,10 @@
 
       function runQuiz(index, score) {
         if (index >= quizQuestions.length) {
+          var participantKey = 'bongoong-participant-count';
+          var participantCount = Number(localStorage.getItem(participantKey) || 0) + 1;
+          localStorage.setItem(participantKey, String(participantCount));
+          document.getElementById('stat-participants').textContent = participantCount;
           var summary = '<p><strong>Bạn trả lời đúng ' + score + '/' + quizQuestions.length + ' câu!</strong></p>' +
             '<p>Hãy chia sẻ kiến thức phòng chống lừa đảo và kỹ năng sử dụng VNeID tới người thân trong gia đình nhé.</p>';
           openModal('HOÀN THÀNH THỬ THÁCH', 'Chúc mừng Công dân số Bờ Ngoong!', summary);
@@ -846,9 +894,6 @@
         });
       }
 
-      document.getElementById('start-quiz-btn').addEventListener('click', function () {
-        runQuiz(0, 0);
-      });
 
       var allPosts = [];
       var selectedCat = 'all';
@@ -856,62 +901,62 @@
         {
           title: 'Nhận diện cuộc gọi giả danh Công an',
           category: 'Cảnh báo lừa đảo',
-          summary: 'Cơ quan Công an không yêu cầu chuyển tiền qua điện thoại. Khi nghi ngờ, hãy tắt máy và xác minh trực tiếp.',
-          content: 'Cảnh giác khi người gọi tự xưng Công an, Công tố viên hoặc nhân viên Ngân hàng.\n\n• Không cung cấp mã OTP, mật khẩu, tài khoản ngân hàng.\n• Không nghe theo yêu cầu tải ứng dụng, quét mã QR hoặc chuyển tiền để giữ tài khoản.\n• Tắt máy, lưu lại số điện thoại và báo Công an xã Bờ Ngoong.'
+          summary: 'Các đối tượng thường mượn danh Công an, Công tố viên để tạo áp lực, ép người dân làm theo ngay.',
+          content: 'KỊCH BẢN LỪA ĐẢO GIẢ DANH CƠ QUAN NHÀ NƯỚC\n\nCác đối tượng thường tự xưng là cán bộ điều tra, Công an, Viện kiểm sát hoặc nhân viên Ngân hàng. Họ có thể cung cấp đầy đủ họ tên, số CMND, địa chỉ nhà hoặc thông tin cá nhân để lấy lòng tin. Đối tượng yêu cầu người dân giữ bí mật cuộc gọi, truy cập đường link lạ, cài ứng dụng điều khiển điện thoại, chuyển tiền hoặc rút tiền để \"đảm bảo tài sản\".\n\nCƠ QUAN CHỨC NĂNG KHÔNG LÀM NHƯ VẬY\n\nCơ quan Công an, Viện kiểm sát, Tòa án và các cơ quan Nhà nước không yêu cầu công dân nộp tiền, chuyển tiền vào tài khoản cá nhân hoặc cung cấp mã OTP qua điện thoại. Tuyệt đối không cung cấp mật khẩu tài khoản, mã xác thực, ảnh CCCD, giấy tờ ngân hàng cho người gọi.\n\nKHI NHẬN CUỘC GỌI NGHI NGỜ\n\nTắt máy hoặc kết thúc cuộc gọi. Không truy cập link, không quét mã QR và không cài phần mềm theo hướng dẫn của đối tượng. Xác minh trực tiếp bằng số điện thoại của cơ quan công an hoặc chi nhánh Ngân hàng được công bố chính thức. Nếu đã cung cấp thông tin hoặc chuyển tiền, cần chụp màn hình cuộc gọi, tin nhắn, lịch sử giao dịch và liên hệ Ngân hàng để khóa tài khoản, đồng thời báo Công an xã Bờ Ngoong để được hướng dẫn xử lý kịp thời.'
         },
         {
           title: 'Bảo vệ tài khoản Ngân hàng khi nhận tin nhắn lạ',
           category: 'Cảnh báo lừa đảo',
-          summary: 'Mã OTP là thông tin bí mật tuyệt đối, không chia sẻ cho bất kỳ ai.',
-          content: 'Mã OTP được dùng để xác nhận giao dịch của chính chủ tài khoản.\n\n• Không đọc OTP cho người gọi điện, tin nhắn hoặc chat.\n• Không cài ứng dụng điều khiển điện thoại theo yêu cầu người lạ.\n• Khi nghi ngờ, khóa thẻ hoặc tài khoản qua số điện thoại chính thức của Ngân hàng.'
+          summary: 'Mã OTP, mật khẩu và ứng dụng ngân hàng là tài sản số cần được bảo vệ như tiền mặt.',
+          content: 'DẤU HIỆU CẦN CẢNH GIÁC\n\nNgười lạ có thể gọi điện tự xưng nhân viên Ngân hàng, tổng đài hỗ trợ, nhân viên bưu điện hoặc nhân viên sàn thương mại. Họ báo rằng tài khoản của bạn đang bị khóa, trúng thưởng, có giao dịch bất thường hoặc cần xác minh khuôn mặt. Sau đó, đối tượng yêu cầu cung cấp mã OTP, mật khẩu, mã xác thực hoặc cho phép cài ứng dụng điều khiển thiết bị.\n\nKHÔNG CUNG CẤP OTP CHO BẤT KỲ AI\n\nOTP là mật khẩu một lần để xác nhận giao dịch. Nhân viên Ngân hàng không hỏi mã OTP, mã PIN, mật khẩu ứng dụng hoặc mã xác thực điện thoại. Không chụp, quay màn hình hoặc gửi thông tin thẻ. Không bấm link trong tin nhắn nếu không thể xác minh nguồn gốc.\n\nCÁCH BẢO VỆ TÀI KHOẢN\n\nChỉ liên hệ Ngân hàng qua số ghi trên thẻ, ứng dụng chính thức hoặc chi nhánh gần nhất. Bật xác thực hai bước, thay đổi mật khẩu mạnh, không dùng chung mật khẩu cho nhiều tài khoản. Khi phát hiện giao dịch lạ, liên hệ Ngân hàng để tạm khóa thẻ, đổi mật khẩu và kiểm tra lịch sử giao dịch ngay.'
         },
         {
           title: 'VNeID an toàn cho người dân',
           category: 'Kỹ năng số & VNeID',
-          summary: 'Giữ kín mật khẩu, mã xác thực và chỉ sử dụng ứng dụng VNeID chính thức.',
-          content: 'Tài khoản VNeID gắn với thông tin cá nhân quan trọng.\n\n• Tải ứng dụng chỉ từ kho ứng dụng chính thức.\n• Không gửi hình màn hình tài khoản cho người lạ.\n• Không cung cấp mã xác thực cho người gọi hỗ trợ.\n• Liên hệ điểm hỗ trợ VNeID tại xã khi cần kích hoạt hoặc khôi phục tài khoản.'
+          summary: 'Hướng dẫn nhận biết thông tin chính thống, bảo vệ tài khoản và sử dụng VNeID đúng cách.',
+          content: 'VNeID VÀ LỢI ÍCH CHUYỂN ĐỔI SỐ\n\nVNeID là ứng dụng hỗ trợ định danh điện tử, cài đặt giấy tờ điện tử, tra cứu thủ tục hành chính và sử dụng một số tiện ích công trực tuyến. Khi kích hoạt tài khoản, người dân cần bảo vệ mặt, mã QR, mật khẩu và mã xác thực như thông tin cá nhân quan trọng.\n\nCÁCH SỬ DỤNG AN TOÀN\n\nChỉ tải VNeID từ kho ứng dụng chính thức. Không cài ứng dụng người khác gửi qua Zalo, tin nhắn hoặc link rút gọn. Không chia sẻ ảnh màn hình tài khoản hoặc mã QR định danh cho người lạ. Không cung cấp mã OTP, mật khẩu hoặc mã xác thực cho người gọi điện nói rằng họ đang hỗ trợ kích hoạt tài khoản.\n\nKHI GẶP SỰ CỐ\n\nNếu quên mật khẩu, mất điện thoại hoặc nghi ngờ tài khoản bị truy cập trái phép, không làm theo hướng dẫn trong tin nhắn. Hãy đến điểm hỗ trợ VNeID của xã hoặc cơ quan Công an công bố địa điểm hỗ trợ để được hướng dẫn trực tiếp. Luôn kiểm tra lại thông tin sau khi đăng nhập ở thiết bị mới.'
         },
         {
           title: 'Tránh mã QR giả và đường link lạ',
           category: 'Cảnh báo lừa đảo',
-          summary: 'Không quét mã QR hoặc mở link chưa xác minh nguồn gốc.',
-          content: 'Mã QR có thể dẫn đến trang giả mạo để đánh cắp tài khoản và thông tin thanh toán.\n\n• Kiểm tra người gửi và mục đích trước khi quét mã.\n• Không quét mã tại nơi công cộng nếu không rõ nguồn gốc.\n• Kiểm tra kỹ tên miền và thông tin người thụ hưởng trước khi chuyển tiền.'
+          summary: 'Mã QR và đường link lạ có thể dẫn đến trang giả mạo để chiếm tài khoản và tiền.',
+          content: 'DẤU HIỆU NGHI NGỜ\n\nĐối tượng gửi mã QR hoặc đường link với lý do nhận tiền thưởng, hoàn tiền, xác minh tài khoản, đổi thẻ, tra cứu phạt nguội hoặc hỗ trợ VNeID. Sau khi quét hoặc mở link, trang web có thể yêu cầu đăng nhập, cung cấp OTP hoặc cho phép cài ứng dụng.\n\nTRƯỚC KHI QUÉT Mã QR\n\nKiểm tra mã QR ở vật phẩm, hóa đơn hoặc tin nhắn có nguyên chủ rõ ràng hay không. Không quét mã QR dán đè lên biển QR cũ ở quán ăn, trạm thu phí hoặc cửa hàng. Xem kỹ tên người thụ hưởng, nội dung chuyển tiền và số tiền trước khi xác nhận.\n\nKHI ĐÃ BẤM NHẦM LINK\n\nKhông nhập thông tin hoặc mật khẩu. Đóng trình duyệt, xóa dữ liệu trang lạ, đổi mật khẩu và kiểm tra thiết bị đăng nhập. Nếu đã chuyển tiền, lưu ảnh màn hình và liên hệ ngân hàng ngay. Không đưa điện thoại cho người lạ hoặc cài ứng dụng điều khiển theo yêu cầu.'
         },
         {
           title: 'Không tải file APK ngoài kho ứng dụng',
           category: 'Kỹ năng số & VNeID',
-          summary: 'File APK gửi qua Zalo hoặc tin nhắn có thể chứa mã độc.',
-          content: 'Kẻ gian thường gửi file APK giả danh phần mềm Ngân hàng, Công an hoặc hỗ trợ VNeID.\n\n• Chỉ tải ứng dụng trên Google Play, App Store hoặc website chính thức.\n• Không mở file .apk gửi qua tin nhắn người lạ.\n• Nếu đã cài nhầm, xóa ứng dụng, quét điện thoại và đổi mật khẩu.'
+          summary: 'File APK hoặc phần mềm ngoài kho chính thức có thể chiếm quyền điện thoại và tài khoản.',
+          content: 'NGUY CƠ TỪ FILE .APK\n\nFile APK là gói cài đặt ứng dụng trên điện thoại Android. Kẻ gian thường gửi file giả danh ứng dụng Ngân hàng, Công an, VNeID, đơn vị bưu chính hoặc phần mềm nộp phạt giao thông. Khi người dân cho phép quyền truy cập, ứng dụng độc hại có thể đọc tin nhắn, ghi màn hình, xem danh bạ, điều khiển điện thoại hoặc đăng nhập tài khoản.\n\nKHÔNG CÀI ỨNG DỤNG TỪ NGƯỜI LẠ\n\nKhông mở file đính kèm trong tin nhắn, Zalo, Facebook hoặc email chưa xác minh. Chỉ tải ứng dụng trên Google Play, App Store hoặc trang chính thức của đơn vị phát hành. Không cho phép quyền truy cập tin nhắn, quyền đọc màn hình, cài ứng dụng không rõ nguồn gốc.\n\nXỬ LÝ KHI ĐÃ CÀI NHẦM\n\nTắt mạng, gỡ ứng dụng vừa cài, quét mã độc bằng trình bảo vệ trên điện thoại. Đổi mật khẩu Zalo, Facebook, Ngân hàng và email trên thiết bị sạch. Không sử dụng tiếp ứng dụng ngân hàng khi điện thoại chưa được bảo vệ. Nếu tài khoản bị chiếm đoạt, báo Ngân hàng, nhà mạng hoặc Công an xã để được hướng dẫn.'
         },
         {
           title: 'Cảnh giác mua hàng, đặt cọc trực tuyến',
           category: 'Cảnh báo lừa đảo',
-          summary: 'Kiểm tra người bán và ưu tiên sàn thương mại có nguồn gốc rõ ràng.',
-          content: 'Trước khi mua hàng qua mạng:\n\n• Kiểm tra địa chỉ, số điện thoại, đánh giá và lịch sử người bán.\n• Không chuyển cọc toàn bộ cho tài khoản cá nhân mới.\n• Không tin hàng giá quá rẻ so với thị trường.\n• Giữ lại tin nhắn, hóa đơn và lịch sử giao dịch.'
+          summary: 'Kiểm tra kỹ người bán, sàn thương mại và hình thức thanh toán trước khi đặt cọc.',
+          content: 'CÁC DẤU HIỆU NÊN TRÁNH\n\nNgười bán thu hút khách bằng hàng hóa rẻ bất thường, khuyến mãi lớn, đánh giá giả hoặc trang mạng xã hội vừa tạo. Khi mua hàng, đối tượng yêu cầu chuyển toàn bộ tiền cọc qua tài khoản cá nhân, đăng ký nhận hàng qua link lạ hoặc không cho xem địa chỉ cửa hàng rõ ràng.\n\nKIỂM TRA TRƯỚC KHI THANH TOÁN\n\nƯu tiên mua trên sàn thương mại hoặc cửa hàng có địa chỉ, số điện thoại và chính sách đổi trả rõ ràng. Không tin chỉ một hình ảnh đẹp, lời quảng cáo hoặc tài khoản bị mượn. Xác minh người bán qua nhiều kênh, yêu cầu hóa đơn hoặc video hàng thực tế.\n\nGIỮ BẰNG CHỨNG GIAO DỊCH\n\nChỉ thanh toán qua kênh an toàn và tránh chuyển cọc trước nếu chưa xác minh. Lưu tin nhắn, hóa đơn, thời gian giao dịch, số tài khoản và đường link người bán. Khi nghi ngờ lừa đảo, không tiếp tục chuyển tiền và báo địa chỉ, tài khoản hoặc trang bán hàng cho Công an địa phương.'
         },
         {
           title: 'Bảo vệ thông tin CCCD và giấy tờ cá nhân',
           category: 'Tuyên truyền',
-          summary: 'Chỉ cung cấp CCCD và giấy tờ cho cơ quan, tổ chức có thẩm quyền.',
-          content: 'Giấy tờ cá nhân có thể bị lợi dụng để mở tài khoản, vay tiền hoặc giả danh.\n\n• Không gửi ảnh CCCD cho người lạ trên mạng xã hội.\n• Che khuôn mặt hoặc số giấy tờ nếu không thật sự cần thiết.\n• Không ký hoặc xác nhận hồ sơ trực tuyến khi chưa đọc kỹ nội dung.'
+          summary: 'CCCD và giấy tờ cá nhân có thể bị sử dụng để giả danh, vay vốn hoặc mở tài khoản.',
+          content: 'CCCD LÀ THÔNG TIN NHẠY CẢM\n\nẢnh CCCD, sổ hộ khẩu, bằng lái xe, giấy khai sinh hoặc ảnh khuôn mặt có thể bị đối tượng lợi dụng để làm tài khoản, vay tiền, đăng ký SIM, mở ví điện tử hoặc giả danh người dân. Một số đối tượng yêu cầu người dân gửi giấy tờ qua mạng vì lý do nhận thưởng, hoàn tiền hoặc hỗ trợ thủ tục.\n\nKHI NÀO NÊN CUNG CẤP\n\nChỉ cung cấp thông tin khi làm thủ tục trực tiếp hoặc qua cổng chính thống của cơ quan, tổ chức có thẩm quyền. Kiểm tra tên cơ quan, địa chỉ và mục đích thu thập dữ liệu trước khi gửi. Không công khai giấy tờ trên mạng xã hội hoặc nhóm chat.\n\nBẢO VỆ THÔNG TIN HÀNG NGÀY\n\nChe bớt số CCCD nếu không cần hiển thị toàn bộ. Không ký, đóng dấu hoặc xác nhận giấy tờ chưa đọc kỹ nội dung. Khi phát hiện tài khoản SIM, vay tiền hoặc giao dịch không phải do mình thực hiện, liên hệ cơ quan có thẩm quyền để kiểm tra và yêu cầu khóa hoặc xử lý.'
         },
         {
           title: 'Xử lý khi nghi ngờ bị lừa đảo',
           category: 'Tuyên truyền',
-          summary: 'Tắt máy, khóa tài khoản, lưu bằng chứng và báo ngân hàng, Công an.',
-          content: 'Khi phát hiện dấu hiệu bị lừa:\n\n• Dừng giao dịch và liên hệ Ngân hàng để khóa tài khoản, thẻ.\n• Lưu tin nhắn, số điện thoại, hình ảnh và lịch sử chuyển tiền.\n• Báo ngay Công an xã Bờ Ngoong để được hướng dẫn xử lý.\n• Không tiếp tục trao đổi hay thanh toán theo yêu cầu của đối tượng.'
+          summary: 'Khi phát hiện lừa đảo, hành động nhanh và lưu bằng chứng để ngăn thiệt hại lan rộng.',
+          content: 'DỪNG GIAO DỊCH NGAY\n\nNếu vừa chuyển tiền, không tiếp tục làm theo yêu cầu của đối tượng. Liên hệ hotline Ngân hàng ghi trên thẻ, ứng dụng hoặc website chính thức để khóa thẻ, khóa tài khoản và cảnh báo giao dịch. Nếu đối tượng yêu cầu cài ứng dụng, cắt mạng và gỡ ứng dụng ngay.\n\nGIỮ BẰNG CHỨNG\n\nChụp ảnh cuộc gọi, tin nhắn, số tài khoản, mã giao dịch, hóa đơn và trang web đối tượng. Không sửa hoặc xóa dữ liệu. Ghi lại thời gian, địa điểm, số điện thoại, tài khoản và diễn biến cuộc gọi để trình báo chính xác.\n\nBÁO CƠ QUAN CÓ THẨM QUYỀN\n\nLiên hệ Công an xã Bờ Ngoong hoặc cơ quan Công an gần nhất để được hướng dẫn. Cảnh báo người thân, bạn bè và xóm làng để họ không mắc kịch bản tương tự. Không gửi tiếp tiền, không nộp phí \"giải ngân\", \"đảm bảo tài sản\" hoặc \"phí xác minh\" theo yêu cầu của kẻ lừa đảo.'
         },
         {
           title: 'An toàn trên mạng xã hội',
           category: 'Kỹ năng số & VNeID',
-          summary: 'Hạn chế chia sẻ thông tin cá nhân và bật xác thực hai bước.',
-          content: 'Tài khoản mạng xã hội có thể bị chiếm đoạt để giả danh kêu gọi chuyển tiền.\n\n• Bật xác thực hai bước và kiểm tra thiết bị đăng nhập.\n• Không chia sẻ mã OTP hoặc mật khẩu.\n• Kiểm tra tin nhắn kêu gọi tiền từ người thân qua cuộc gọi trực tiếp.\n• Báo cáo tài khoản giả mạo và cảnh báo bạn bè.'
+          summary: 'Bảo vệ tài khoản mạng xã hội khỏi chiếm đoạt và nguy cơ giả danh người thân.',
+          content: 'TÀI KHOẢN MẠNG XÃ HỘI DỄ BỊ CHIẾM ĐOẠT\n\nKhi tài khoản bị hack, kẻ gian có thể nhắn tin mượn tiền, bán hàng giả, gửi link lừa đảo hoặc giả danh người thân. Kịch bản phổ biến là tin nhắn khẩn cấp, tài khoản của cấp dưới, đồng nghiệp hoặc người thân yêu cầu chuyển tiền và cam kết sẽ hoàn lại.\n\nBIỆN PHÁP BẢO VỆ\n\nĐặt mật khẩu mạnh, không dùng chung với email hoặc Ngân hàng. Bật xác thực hai bước, kiểm tra thiết bị đăng nhập và không cấp mã OTP cho người lạ. Không đăng công khai địa chỉ nhà, lịch đi vắng, số CCCD hoặc biển số xe.\n\nKHI NHẬN TIN NGHI NGỜ\n\nGọi trực tiếp người thân qua số đã lưu để xác minh thay vì chỉ nhắn lại trên tài khoản. Không bấm link lạ hoặc gửi tiền theo yêu cầu khẩn. Khi tài khoản của mình bị chiếm đoạt, báo về nhà cung cấp, cảnh báo bạn bè, đổi mật khẩu email và kiểm tra phiên đăng nhập.'
         },
         {
           title: 'Công dân số Bờ Ngoong: 5 thói quen an toàn',
           category: 'Tuyên truyền',
-          summary: 'Cảnh giác trước tin nhắn, xác minh nguồn tin và bảo vệ dữ liệu cá nhân.',
-          content: 'Mỗi người dân cần giữ 5 thói quen sau:\n\n1. Không cung cấp OTP hoặc mật khẩu.\n2. Không bấm link hoặc quét mã QR lạ.\n3. Không tải file APK ngoài kho ứng dụng chính thức.\n4. Luôn xác minh thông tin qua nguồn chính thống.\n5. Phản ánh kịp thời dấu hiệu lừa đảo tới Công an xã.'
+          summary: 'Bốn nhóm kỹ năng giúp người dân Bờ Ngoong sử dụng dịch vụ số an toàn, chủ động.',
+          content: 'THÓI QUEN THỨ NHẤT: XÁC MINH THÔNG TIN\n\nKhông tin mọi tin nhắn, cuộc gọi hoặc trang web chỉ vì người gửi biết thông tin cá nhân. Kiểm tra tên miền, số điện thoại, địa chỉ cơ quan và nội dung yêu cầu. Với các yêu cầu tài chính, luôn xác minh trực tiếp qua kênh chính thức.\n\nTHÓI QUEN THỨ HAI: BẢO VỆ TÀI KHOẢN\n\nKhông chia sẻ OTP, mật khẩu, mã xác thực hoặc cho người lạ điều khiển điện thoại. Bật xác thực hai bước cho Zalo, Facebook, email, Ngân hàng và VNeID. Không dùng chung mật khẩu cho nhiều tài khoản.\n\nTHÓI QUEN THỨ BA: AN TOÀN KHI MUA SẮM VÀ THỰC HIỆN DỊCH VỤ CÔNG\n\nƯu tiên sàn thương mại, website chính thống và địa điểm hỗ trợ công tại địa phương. Không chuyển tiền cọc cho tài khoản cá nhân chưa xác minh. Khi nộp hồ sơ trực tuyến, kiểm tra đúng cổng dịch vụ công và lưu biên nhận.\n\nTHÓI QUEN THỨ TƯ: LAN TỎA KIẾN THỨC\n\nLưu lại bằng chứng khi nghi ngờ bị lừa, cảnh báo người thân và chia sẻ kinh nghiệm phòng tránh qua xóm làng. Mọi dấu hiệu lừa đảo hoặc giả danh cơ quan có thể phản ánh tới Công an xã Bờ Ngoong để được hướng dẫn kịp thời.'
         }
       ];
 
@@ -986,9 +1031,24 @@
         renderPosts();
       });
 
-      allPosts = fallbackPosts;
+
+      var visibilityOverrides = {};
+      try {
+        visibilityOverrides = JSON.parse(localStorage.getItem('bongoong-post-visibility') || '{}');
+      } catch (error) {}
+      allPosts = fallbackPosts
+        .map(function(post) {
+          if (Object.prototype.hasOwnProperty.call(visibilityOverrides, post.id)) {
+            post.published = visibilityOverrides[post.id];
+          }
+          return post;
+        })
+        .filter(function(post) { return post.published !== false; });
       renderPosts();
       document.getElementById('stat-posts').textContent = allPosts.length;
+      var savedParticipants = Number(localStorage.getItem('bongoong-participant-count') || 0);
+      document.getElementById('stat-participants').textContent =
+        savedParticipants > 0 ? savedParticipants : '0';
 
       fetch(cfg.apiUrl + '?action=getPublicPosts')
         .then(function (res) { return res.json(); })

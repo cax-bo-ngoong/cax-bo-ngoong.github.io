@@ -269,9 +269,6 @@
   <header class="topbar">
     <div class="topbar-inner">
       <div class="identity">
-        <div class="emblem">
-          <img src="Screenshot%202026-11-24%20123139.png" alt="Huy hiệu Công an nhân dân">
-        </div>
         <div class="unit-avatar">
           <img src="84e029e9-5834-48bd-9a77-b8a442ad11fd.jfif" alt="Công an xã Bờ Ngoong">
         </div>
@@ -378,6 +375,9 @@
 
         function renderQuestion() {
           if (index >= questions.length) {
+            var participantKey = 'bongoong-participant-count';
+            var participantCount = Number(localStorage.getItem(participantKey) || 0) + 1;
+            localStorage.setItem(participantKey, String(participantCount));
             content.innerHTML =
               '<p class="quiz-progress">HOÀN THÀNH CUỘC THI</p>' +
               '<h4>Kết quả: ' + score + '/' + questions.length + ' câu đúng</h4>' +

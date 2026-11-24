@@ -144,6 +144,65 @@
       box-shadow: 0 7px 16px rgba(20,93,160,.18);
     }
     .btn-danger { border-color: #efc5c5; background: #fff5f5; }
+    .btn-toggle {
+      min-width: 70px;
+      color: var(--police-dark);
+      background: #eef5fb;
+      border-color: #bdd3e6;
+    }
+    .btn-toggle.hidden-post {
+      color: #7a5a00;
+      background: #fff8df;
+      border-color: #eccd73;
+    }
+    .question-builder {
+      border: 1px solid #d6e2ec;
+      border-radius: 12px;
+      background: #f8fbfd;
+      padding: 12px;
+    }
+    .contest-question-block {
+      border: 1px solid #d9e5ef;
+      border-radius: 10px;
+      background: #fff;
+      padding: 12px;
+      margin-bottom: 10px;
+    }
+    .contest-question-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .contest-answer-row {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 7px;
+    }
+    .contest-answer-row input[type="text"] {
+      margin: 0;
+    }
+    .contest-answer-row input[type="radio"] {
+      width: auto;
+      margin: 0;
+      cursor: pointer;
+    }
+    .add-answer-btn,
+    .remove-answer-btn,
+    .remove-question-btn,
+    .add-question-btn {
+      padding: 7px 10px;
+      font-size: 12px;
+    }
+    .contest-question-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
     .post-item { border-bottom-color: #edf2f6; }
     .post-item strong { color: var(--police-dark); }
     #msg {
@@ -167,9 +226,6 @@
   <div class="wrap">
     <div class="topbar">
       <div class="admin-brand">
-        <div class="admin-emblem">
-          <img src="Screenshot%202026-11-24%20123139.png" alt="Huy hiệu Công an nhân dân">
-        </div>
         <div class="admin-avatar">
           <img src="84e029e9-5834-48bd-9a77-b8a442ad11fd.jfif" alt="Công an xã Bờ Ngoong">
         </div>
@@ -220,9 +276,13 @@
             <input id="contest-link" type="url" placeholder="https://...">
           </div>
           <div class="field">
-            <label for="contest-questions">Câu hỏi trắc nghiệm (không cần link)</label>
-            <textarea id="contest-questions" style="min-height:180px" placeholder='[{"q":"Câu hỏi","options":["Đáp án A","Đáp án B"],"answer":0}]'></textarea>
-            <div class="muted">Nhập JSON: mỗi câu gồm q, options và answer (vị trí đáp án bắt đầu từ 0).</div>
+            <label>Câu hỏi trắc nghiệm (không cần link)</label>
+            <div class="question-builder">
+              <div id="contest-question-list"></div>
+              <button id="add-question-btn" class="btn-primary add-question-btn" type="button">+ Thêm câu hỏi</button>
+            </div>
+            <textarea id="contest-questions" hidden></textarea>
+            <div class="muted">Chọn một ô tròn để xác định đáp án đúng cho mỗi câu.</div>
           </div>
           <div class="field">
             <label for="contest-status">Trạng thái</label>
@@ -303,6 +363,152 @@
       var token = sessionStorage.getItem('bongoong-post-token') || '';
       var editingId = '';
 
+      var contestQuestionCounter = 0;
+
+      function addContestAnswer(questionBlock, answerText, isCorrect) {
+        var answerRows = questionBlock.querySelector('.contest-answer-list');
+        var answerIndex = answerRows.querySelectorAll('.contest-answer-row').length;
+        var questionIndex = questionBlock.getAttribute('data-question-index');
+        var row = document.createElement('div');
+        row.className = 'contest-answer-row';
+        row.innerHTML =
+          '<input type="radio" name="correct-' + questionIndex + '" ' + (isCorrect ? 'checked' : '') + '>' +
+          '<input type="text" class="contest-answer-text" maxlength="300" placeholder="Nội dung đáp án ' + (answerIndex + 1) + '" value="' +
+          escapeHtml(answerText || '') + '">' +
+          '<button type="button" class="remove-answer-btn btn-danger">Xóa</button>';
+        var removeButton = row.querySelector('.remove-answer-btn');
+        removeButton.addEventListener('click', function () {
+          var rows = answerRows.querySelectorAll('.contest-answer-row');
+          if (rows.length <= 2) {
+            showMsg('Mỗi câu cần ít nhất 2 đáp án.', true);
+            return;
+          }
+          row.remove();
+          renumberContestAnswers(questionBlock);
+        });
+        answerRows.appendChild(row);
+      }
+
+      function renumberContestAnswers(questionBlock) {
+        var rows = questionBlock.querySelectorAll('.contest-answer-row');
+        rows.forEach(function (row, index) {
+          var input = row.querySelector('.contest-answer-text');
+          if (!input.value) input.placeholder = 'Nội dung đáp án ' + (index + 1);
+          var radio = row.querySelector('input[type="radio"]');
+          radio.value = String(index);
+        });
+      }
+
+      function addContestQuestion(questionData) {
+        contestQuestionCounter++;
+        var questionIndex = contestQuestionCounter;
+        var block = document.createElement('div');
+        block.className = 'contest-question-block';
+        block.setAttribute('data-question-index', String(questionIndex));
+        block.innerHTML =
+          '<div class="contest-question-head">' +
+          '<strong>Câu ' + questionIndex + '</strong>' +
+          '<button type="button" class="remove-question-btn btn-danger">Xóa câu</button>' +
+          '</div>' +
+          '<div class="field" style="margin-bottom:8px">' +
+          '<input type="text" class="contest-question-text" maxlength="500" placeholder="Nhập nội dung câu hỏi">' +
+          '</div>' +
+          '<div class="contest-answer-list"></div>' +
+          '<div class="contest-question-actions">' +
+          '<button type="button" class="add-answer-btn">+ Thêm đáp án</button>' +
+          '</div>';
+
+        block.querySelector('.contest-question-text').value = questionData && questionData.q ? questionData.q : '';
+        block.querySelector('.remove-question-btn').addEventListener('click', function () {
+          var blocks = document.querySelectorAll('.contest-question-block');
+          if (blocks.length <= 1) {
+            showMsg('Cuộc thi cần ít nhất 1 câu hỏi.', true);
+            return;
+          }
+          block.remove();
+          renumberContestQuestions();
+        });
+        block.querySelector('.add-answer-btn').addEventListener('click', function () {
+          addContestAnswer(block, '', false);
+        });
+        document.getElementById('contest-question-list').appendChild(block);
+
+        var answers = questionData && Array.isArray(questionData.options)
+          ? questionData.options
+          : ['', ''];
+        var correctIndex = questionData && Number.isInteger(Number(questionData.answer))
+          ? Number(questionData.answer)
+          : 0;
+        answers.forEach(function (answer, index) {
+          addContestAnswer(block, answer, index === correctIndex);
+        });
+        renumberContestQuestions();
+      }
+
+      function renumberContestQuestions() {
+        var blocks = document.querySelectorAll('.contest-question-block');
+        blocks.forEach(function (block, index) {
+          block.querySelector('.contest-question-head strong').textContent = 'Câu ' + (index + 1);
+          block.setAttribute('data-question-index', String(index + 1));
+          var radios = block.querySelectorAll('input[type="radio"]');
+          radios.forEach(function (radio) {
+            radio.name = 'correct-' + (index + 1);
+          });
+        });
+        contestQuestionCounter = blocks.length;
+      }
+
+      function getContestQuestions() {
+        var questions = [];
+        var blocks = document.querySelectorAll('.contest-question-block');
+        for (var i = 0; i < blocks.length; i++) {
+          var block = blocks[i];
+          var q = block.querySelector('.contest-question-text').value.trim();
+          var answerInputs = block.querySelectorAll('.contest-answer-text');
+          var radios = block.querySelectorAll('input[type="radio"]');
+          var options = [];
+          var answer = -1;
+          for (var j = 0; j < answerInputs.length; j++) {
+            var text = answerInputs[j].value.trim();
+            if (!text) {
+              showMsg('Vui lòng nhập đầy đủ nội dung đáp án ở Câu ' + (i + 1) + '.', true);
+              answerInputs[j].focus();
+              return null;
+            }
+            options.push(text);
+            if (radios[j].checked) answer = j;
+          }
+          if (!q) {
+            showMsg('Vui lòng nhập nội dung Câu ' + (i + 1) + '.', true);
+            block.querySelector('.contest-question-text').focus();
+            return null;
+          }
+          if (answer < 0) {
+            showMsg('Hãy chọn đáp án đúng cho Câu ' + (i + 1) + '.', true);
+            return null;
+          }
+          questions.push({ q: q, options: options, answer: answer });
+        }
+        return questions;
+      }
+
+      function parseContestQuestions(value) {
+        if (!value) return [];
+        if (Array.isArray(value)) return value;
+        try {
+          var parsed = JSON.parse(value);
+          return Array.isArray(parsed) ? parsed : [];
+        } catch (error) {
+          return [];
+        }
+      }
+
+      function escapeHtml(text) {
+        var div = document.createElement('div');
+        div.textContent = text || '';
+        return div.innerHTML;
+      }
+
       function resetContestForm() {
         document.getElementById('contest-form').reset();
         document.getElementById('contest-id').value = '';
@@ -312,6 +518,9 @@
         document.getElementById('contest-form-heading').textContent = 'Tạo cuộc thi mới';
         document.getElementById('contest-save-btn').textContent = 'Lưu cuộc thi';
         document.getElementById('contest-cancel-btn').classList.add('hidden');
+        document.getElementById('contest-question-list').innerHTML = '';
+        contestQuestionCounter = 0;
+        addContestQuestion();
       }
 
       function startContestEdit(contest) {
@@ -320,11 +529,13 @@
         document.getElementById('contest-description').value = contest.description || '';
         document.getElementById('contest-organizer').value = contest.organizer || 'Công an xã Bờ Ngoong';
         document.getElementById('contest-link').value = contest.link || '';
-        document.getElementById('contest-questions').value = contest.questions
-          ? (typeof contest.questions === 'string'
-            ? contest.questions
-            : JSON.stringify(contest.questions, null, 2))
-          : '';
+        document.getElementById('contest-question-list').innerHTML = '';
+        contestQuestionCounter = 0;
+        var questions = parseContestQuestions(contest.questions);
+        if (!questions.length) questions = [{ q: '', options: ['', ''], answer: 0 }];
+        questions.forEach(function (question) {
+          addContestQuestion(question);
+        });
         document.getElementById('contest-status').value = contest.status || 'active';
         document.getElementById('contest-start').value = contest.startDate || '';
         document.getElementById('contest-end').value = contest.endDate || '';
@@ -441,11 +652,20 @@
           }
           var box = document.getElementById('admin-posts');
           box.innerHTML = '';
-          if (!data.posts.length) {
-            box.innerHTML = '<p class="muted">Chưa có bài viết nào.</p>';
-            return;
-          }
-          data.posts.forEach(function (post) {
+          var fallbackPosts = [
+            { id:'POST001', title:'Nhận diện cuộc gọi giả danh Công an', category:'Cảnh báo lừa đảo', summary:'Các đối tượng thường mượn danh Công an, Công tố viên để tạo áp lực, ép người dân làm theo ngay.', content:'KỊCH BẢN LỪA ĐẢO GIẢ DANH CƠ QUAN NHÀ NƯỚC\n\nCác đối tượng thường tự xưng là cán bộ điều tra, Công an, Viện kiểm sát hoặc nhân viên Ngân hàng. Họ yêu cầu truy cập link lạ, cài ứng dụng điều khiển điện thoại, chuyển tiền hoặc cung cấp OTP.\n\nCƠ QUAN CHỨC NĂNG KHÔNG LÀM NHƯ VẬY\n\nCơ quan Nhà nước không yêu cầu nộp tiền, chuyển tiền vào tài khoản cá nhân hoặc cung cấp mã OTP qua điện thoại.\n\nKHI NHẬN CUỘC GỌI NGHI NGỜ\n\nKết thúc cuộc gọi, không truy cập link hoặc cài phần mềm. Xác minh qua số chính thức và lưu bằng chứng nếu đã bị thiệt hại.', published:true },
+            { id:'POST002', title:'Bảo vệ tài khoản Ngân hàng khi nhận tin nhắn lạ', category:'Cảnh báo lừa đảo', summary:'Mã OTP, mật khẩu và ứng dụng ngân hàng là tài sản số cần được bảo vệ.', content:'DẤU HIỆU CẦN CẢNH GIÁC\n\nNgười lạ có thể tự xưng nhân viên Ngân hàng, tổng đài hỗ trợ hoặc nhân viên bưu điện. Họ báo tài khoản bị khóa, có giao dịch bất thường hoặc cần xác minh khuôn mặt.\n\nKHÔNG CUNG CẤP OTP\n\nOTP là mật khẩu xác nhận giao dịch một lần. Nhân viên Ngân hàng không hỏi mã OTP, mã PIN hoặc mật khẩu ứng dụng.\n\nCÁCH BẢO VỆ\n\nChỉ liên hệ qua số ghi trên thẻ hoặc ứng dụng chính thức. Bật xác thực hai bước và khóa thẻ khi phát hiện giao dịch lạ.', published:true },
+            { id:'POST003', title:'VNeID an toàn cho người dân', category:'Kỹ năng số & VNeID', summary:'Bảo vệ tài khoản, mã QR và thông tin cá nhân khi sử dụng VNeID.', content:'VNeID HỖ TRỢ ĐỊNH DANH ĐIỆN TỬ\n\nVNeID giúp cài đặt giấy tờ điện tử, tra cứu thủ tục hành chính và sử dụng tiện ích công trực tuyến.\n\nCÁCH SỬ DỤNG AN TOÀN\n\nChỉ tải ứng dụng từ kho chính thức, không cài file gửi qua Zalo hoặc tin nhắn. Không chia sẻ mã OTP, mật khẩu, ảnh màn hình tài khoản hoặc mã QR cho người lạ.\n\nKHI GẶP SỰ CỐ\n\nNếu quên mật khẩu, mất điện thoại hoặc nghi ngờ tài khoản bị truy cập, đến điểm hỗ trợ VNeID hoặc cơ quan Công an địa phương để được hướng dẫn.', published:true },
+            { id:'POST004', title:'Tránh mã QR giả và đường link lạ', category:'Cảnh báo lừa đảo', summary:'Mã QR và đường link lạ có thể dẫn đến trang giả mạo để chiếm tài khoản.', content:'DẤU HIỆU NGHI NGỜ\n\nĐối tượng gửi mã QR hoặc link để nhận thưởng, hoàn tiền, xác minh tài khoản, tra cứu phạt nguội hoặc hỗ trợ VNeID.\n\nKIỂM TRA TRƯỚC KHI QUÉT\n\nKiểm tra mã QR, tên người thụ hưởng và nội dung chuyển tiền. Không quét mã dán đè trên biển QR cũ.\n\nKHI ĐÃ BẤM NHẦM LINK\n\nKhông nhập mật khẩu. Đóng trình duyệt, đổi mật khẩu, kiểm tra thiết bị đăng nhập và liên hệ Ngân hàng nếu đã chuyển tiền.', published:true },
+            { id:'POST005', title:'Không tải file APK ngoài kho ứng dụng', category:'Kỹ năng số & VNeID', summary:'File APK không rõ nguồn có thể chiếm quyền điện thoại và tài khoản.', content:'NGUY CƠ TỪ FILE .APK\n\nKẻ gian gửi file giả danh Ngân hàng, Công an, VNeID hoặc phần mềm nộp phạt để đọc tin nhắn, ghi màn hình hoặc điều khiển điện thoại.\n\nKHÔNG CÀI TỪ NGƯỜI LẠ\n\nChỉ tải ứng dụng từ Google Play, App Store hoặc website chính thức.\n\nKHI ĐÃ CÀI NHẦM\n\nTắt mạng, gỡ ứng dụng, quét mã độc và đổi mật khẩu Zalo, Facebook, email, Ngân hàng.', published:true },
+            { id:'POST006', title:'Cảnh giác mua hàng, đặt cọc trực tuyến', category:'Cảnh báo lừa đảo', summary:'Kiểm tra người bán, sàn thương mại và hình thức thanh toán trước khi đặt cọc.', content:'DẤU HIỆU NÊN TRÁNH\n\nHàng hóa rẻ bất thường, khuyến mãi lớn, đánh giá giả hoặc trang mạng xã hội mới tạo là dấu hiệu cần thận trọng.\n\nKIỂM TRA NGƯỜI BÁN\n\nƯu tiên sàn thương mại, cửa hàng có địa chỉ, số điện thoại và chính sách đổi trả rõ ràng.\n\nGIỮ BẰNG CHỨNG\n\nLưu tin nhắn, hóa đơn, thời gian giao dịch, số tài khoản và link người bán. Không chuyển cọc toàn bộ nếu chưa xác minh.', published:true },
+            { id:'POST007', title:'Bảo vệ thông tin CCCD và giấy tờ cá nhân', category:'Tuyên truyền', summary:'CCCD có thể bị lợi dụng để mở tài khoản, vay tiền hoặc giả danh.', content:'CCCD LÀ THÔNG TIN NHẠY CẢM\n\nẢnh CCCD, sổ hộ khẩu, bằng lái xe hoặc giấy khai sinh có thể bị dùng để vay tiền, đăng ký SIM, mở ví điện tử hoặc giả danh.\n\nKHI NÀO NÊN CUNG CẤP\n\nChỉ cung cấp thông tin cho cơ quan, tổ chức có thẩm quyền qua thủ tục trực tiếp hoặc cổng chính thống.\n\nBẢO VỆ HÀNG NGÀY\n\nKhông công khai CCCD trên mạng xã hội, không ký xác nhận hồ sơ chưa đọc kỹ và liên hệ cơ quan chức năng khi phát hiện thông tin bị lợi dụng.', published:true },
+            { id:'POST008', title:'Xử lý khi nghi ngờ bị lừa đảo', category:'Tuyên truyền', summary:'Hành động nhanh và lưu bằng chứng để ngăn thiệt hại lan rộng.', content:'DỪNG GIAO DỊCH NGAY\n\nNếu vừa chuyển tiền, không tiếp tục làm theo yêu cầu của đối tượng. Liên hệ Ngân hàng qua số chính thức để khóa thẻ và tài khoản.\n\nGIỮ BẰNG CHỨNG\n\nChụp cuộc gọi, tin nhắn, số tài khoản, mã giao dịch, hóa đơn và trang web đối tượng.\n\nBÁO CƠ QUAN CÓ THẨM QUYỀN\n\nLiên hệ Công an xã Bờ Ngoong để được hướng dẫn. Cảnh báo người thân để họ không mắc kịch bản tương tự.', published:true },
+            { id:'POST009', title:'An toàn trên mạng xã hội', category:'Kỹ năng số & VNeID', summary:'Bảo vệ tài khoản khỏi chiếm đoạt và nguy cơ giả danh người thân.', content:'TÀI KHOẢN DỄ BỊ CHIẾM ĐOẠT\n\nKẻ gian có thể nhắn tin mượn tiền, bán hàng giả hoặc giả danh người thân.\n\nBIỆN PHÁP BẢO VỆ\n\nDùng mật khẩu mạnh, bật xác thực hai bước và không chia sẻ OTP.\n\nKHI NHẬN TIN NGHI NGỜ\n\nGọi trực tiếp người thân qua số đã lưu thay vì chỉ nhắn lại trên tài khoản. Khi tài khoản bị chiếm, báo nhà cung cấp, cảnh báo bạn bè và đổi mật khẩu email.', published:true },
+            { id:'POST010', title:'Công dân số Bờ Ngoong: 5 thói quen an toàn', category:'Tuyên truyền', summary:'Kiến thức cơ bản giúp người dân sử dụng dịch vụ số an toàn và chủ động.', content:'THÓI QUEN XÁC MINH\n\nKhông tin tin nhắn hoặc cuộc gọi chỉ vì người gửi biết thông tin cá nhân. Kiểm tra tên miền, số điện thoại và địa chỉ cơ quan.\n\nTHÓI QUEN BẢO VỆ\n\nKhông chia sẻ OTP, mật khẩu hoặc cho người lạ điều khiển điện thoại. Bật xác thực hai bước cho Zalo, Facebook, email, Ngân hàng và VNeID.\n\nTHÓI QUEN GIAO DỊCH AN TOÀN\n\nƯu tiên sàn thương mại, website chính thống và địa điểm hỗ trợ công. Không chuyển tiền cọc cho tài khoản cá nhân chưa xác minh.\n\nTHÓI QUEN LAN TỎA\n\nCảnh báo người thân và chia sẻ kinh nghiệm phòng tránh. Liên hệ Công an xã Bờ Ngoong khi nghi ngờ bị lừa.', published:true }
+          ];
+          var posts = data.posts && data.posts.length ? data.posts : fallbackPosts;
+          posts.forEach(function (post) {
             var item = document.createElement('div');
             item.className = 'post-item';
 
@@ -465,6 +685,40 @@
             editBtn.textContent = 'Sửa';
             editBtn.addEventListener('click', function () { startEdit(post); });
 
+            var toggleBtn = document.createElement('button');
+            toggleBtn.type = 'button';
+            toggleBtn.className = 'btn-toggle' + (post.published ? '' : ' hidden-post');
+            toggleBtn.textContent = post.published ? 'Ẩn bài' : 'Hiện bài';
+            toggleBtn.addEventListener('click', function () {
+              var nextPublished = !post.published;
+              callApi({
+                action: 'setPostPublished',
+                token: token,
+                id: post.id,
+                published: nextPublished
+              }).then(function (res) {
+                if (!res || !res.success) {
+                  if (/^POST\d{3}$/.test(post.id)) {
+                    var overrides = {};
+                    try {
+                      overrides = JSON.parse(localStorage.getItem('bongoong-post-visibility') || '{}');
+                    } catch (error) {}
+                    overrides[post.id] = nextPublished;
+                    localStorage.setItem('bongoong-post-visibility', JSON.stringify(overrides));
+                    post.published = nextPublished;
+                    showMsg(nextPublished ? 'Đã hiển thị bài viết.' : 'Đã ẩn bài viết.');
+                    loadAdminPosts();
+                    return;
+                  }
+                  showMsg((res && res.message) || 'Không đổi được trạng thái bài viết.', true);
+                  return;
+                }
+                post.published = nextPublished;
+                showMsg(nextPublished ? 'Đã hiển thị bài viết.' : 'Đã ẩn bài viết.');
+                loadAdminPosts();
+              });
+            });
+
             var delBtn = document.createElement('button');
             delBtn.type = 'button';
             delBtn.className = 'btn-danger';
@@ -479,6 +733,7 @@
               });
             });
 
+            actions.appendChild(toggleBtn);
             actions.appendChild(editBtn);
             actions.appendChild(delBtn);
             item.appendChild(info);
@@ -522,25 +777,15 @@
 
       document.getElementById('contest-cancel-btn').addEventListener('click', resetContestForm);
 
+      document.getElementById('add-question-btn').addEventListener('click', function () {
+        addContestQuestion();
+      });
+
       document.getElementById('contest-form').addEventListener('submit', function (e) {
         e.preventDefault();
-        var questionsText = document.getElementById('contest-questions').value.trim();
-        if (questionsText) {
-          try {
-            var questions = JSON.parse(questionsText);
-            if (!Array.isArray(questions) || questions.some(function (question) {
-              return !question.q || !Array.isArray(question.options) ||
-                question.options.length < 2 ||
-                !Number.isInteger(Number(question.answer));
-            })) {
-              throw new Error('Sai cấu trúc câu hỏi');
-            }
-          } catch (error) {
-            showMsg('Câu hỏi trắc nghiệm không đúng định dạng JSON.', true);
-            document.getElementById('contest-questions').focus();
-            return;
-          }
-        }
+        var questions = getContestQuestions();
+        if (questions === null) return;
+        var questionsText = JSON.stringify(questions);
         var contestPayload = {
           title: document.getElementById('contest-title').value,
           description: document.getElementById('contest-description').value,
@@ -603,6 +848,7 @@
       } else {
         setLoggedIn(false);
       }
+      resetContestForm();
     })();
   </script>
 </body>
