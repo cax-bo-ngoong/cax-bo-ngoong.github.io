@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Công dân số - Công an xã Bờ Ngoong</title>
+  <style>
+    :root {
+      --green: #0b6337;
+      --green-dark: #074425;
+      --green-soft: #e6f4ec;
+      --gold: #f59e0b;
+      --gold-dark: #d97706;
+      --bg: #f2f6f4;
+      --card: #ffffff;
+      --ink: #13251c;
+      --muted: #5a6d63;
+      --line: #dce6e0;
+      --shadow: 0 8px 24px rgba(11, 56, 33, 0.08);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.55;
+    }
+    .hero {
+      background: linear-gradient(135deg, var(--green-dark), var(--green));
+      color: #fff;
+      padding: 20px 16px 26px;
+      text-align: center;
+    }
+    .hero-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.14);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+      margin-bottom: 10px;
+    }
+    .hero-head {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+    .emblem {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: #b91c1c;
+      border: 2px solid #facc15;
+      color: #facc15;
+      display: grid;
+      place-items: center;
+      font-size: 24px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .hero h1 {
+      margin: 0;
+      font-size: 22px;
+      text-align: left;
+      letter-spacing: 0.3px;
+    }
+    .hero p {
+      margin: 3px 0 0;
+      font-size: 13px;
+      text-align: left;
+      opacity: 0.92;
+    }
+    .hotline {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 14px;
+      padding: 7px 15px;
+      border-radius: 999px;
+      background: var(--gold);
+      color: #171717;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .nav-wrap {
+      background: #fff;
+      border-bottom: 1px solid var(--line);
+      position: sticky;
+      top: 0;
+      z-index: 30;
+    }
+    .nav-tabs {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 10px 14px;
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .tab-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--ink);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .tab-btn.active {
+      background: var(--green);
+      border-color: var(--green);
+      color: #fff;
+    }
+    .tab-btn.map-btn {
+      background: #fff8eb;
+      border-color: #f3c873;
+      color: #92400e;
+    }
+    .container {
+      max-width: 980px;
+      margin: 20px auto 36px;
+      padding: 0 16px;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+      margin-bottom: 22px;
+    }
+    .pill-label {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 999px;
+      background: var(--green-soft);
+      color: var(--green);
+      font-size: 11px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .challenge-card h2 {
+      margin: 0 0 6px;
+      font-size: 20px;
+    }
+    .challenge-card p {
+      margin: 0 0 14px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .btn-gold {
+      width: 100%;
+      padding: 13px 18px;
+      border: 0;
+      border-radius: 10px;
+      background: linear-gradient(90deg, var(--gold), var(--gold-dark));
+      color: #161616;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin: 0 0 12px;
+      flex-wrap: wrap;
+    }
+    .section-head h3 {
+      margin: 0;
+      font-size: 17px;
+      color: var(--green-dark);
+    }
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+    .skill-item {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 15px;
+      cursor: pointer;
+      transition: transform 0.15s, border-color 0.15s;
+    }
+    .skill-item:hover {
+      transform: translateY(-2px);
+      border-color: var(--green);
+    }
+    .skill-item strong {
+      display: block;
+      font-size: 15px;
+      color: var(--green-dark);
+      margin-bottom: 5px;
+    }
+    .skill-item span {
+      display: block;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .stats-bar {
+      background: #e5f3eb;
+      border: 1px solid #c7e5d4;
+      border-radius: 14px;
+      padding: 16px;
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    .stats-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--green-dark);
+      margin-bottom: 10px;
+      letter-spacing: 0.4px;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    .stat-num {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--green);
+    }
+    .stat-num.gold { color: #b45309; }
+    .stat-label {
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .filter-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+    .filter-chip {
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--ink);
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .filter-chip.active {
+      background: var(--green-soft);
+      border-color: var(--green);
+      color: var(--green-dark);
+    }
+    .posts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+      gap: 16px;
+    }
+    .post-card {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: var(--shadow);
+    }
+    .post-thumb {
+      width: 100%;
+      height: 175px;
+      object-fit: cover;
+      background: #dfe9e3;
+    }
+    .post-body {
+      padding: 15px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .post-meta {
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .post-card h4 {
+      margin: 0 0 8px;
+      font-size: 16px;
+      line-height: 1.4;
+    }
+    .post-card p {
+      margin: 0 0 14px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .read-btn {
+      margin-top: auto;
+      align-self: flex-start;
+      padding: 8px 13px;
+      border: 0;
+      border-radius: 8px;
+      background: var(--green);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 25, 17, 0.62);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 60;
+    }
+    .modal-backdrop.open { display: flex; }
+    .modal-box {
+      background: #fff;
+      width: 100%;
+      max-width: 640px;
+      max-height: 86vh;
+      overflow: auto;
+      border-radius: 16px;
+      padding: 20px;
+    }
+    .modal-close {
+      float: right;
+      border: 0;
+      background: #eef3f0;
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .modal-box img {
+      max-width: 100%;
+      border-radius: 10px;
+      margin: 10px 0;
+    }
+    .modal-text {
+      white-space: pre-line;
+      font-size: 14px;
+    }
+    .quiz-option {
+      display: block;
+      width: 100%;
+      text-align: left;
+      padding: 11px 13px;
+      margin-bottom: 8px;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      background: #fff;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .quiz-option:hover { background: #f3f9f5; border-color: var(--green); }
+    footer {
+      text-align: center;
+      padding: 20px 16px 34px;
+      color: var(--muted);
+      font-size: 12px;
+      border-top: 1px solid var(--line);
+      background: #fff;
+    }
+    footer a { color: var(--green); font-weight: 700; text-decoration: none; }
+    @media (max-width: 640px) {
+      .hero h1 { font-size: 18px; }
+      .skills-grid { grid-template-columns: 1fr; }
+      .stats-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero" id="trang-chu">
+    <div class="hero-badge">PHONG TRÀO BÌNH DÂN HỌC VỤ SỐ — XÃ BỜ NGOONG</div>
+    <div class="hero-head">
+      <div class="emblem" aria-hidden="true">★</div>
+      <div>
+        <h1>CÔNG AN XÃ BỜ NGOONG</h1>
+        <p>Tuyên truyền pháp luật · Kỹ năng số · Phục vụ nhân dân</p>
+      </div>
+    </div>
+    <a class="hotline" href="tel:02693000000">☎ Trực ban hỗ trợ Công an xã Bờ Ngoong</a>
+  </header>
+
+  <div class="nav-wrap">
+    <nav class="nav-tabs" aria-label="Điều hướng chính">
+      <a class="tab-btn active" href="#trang-chu">Trang chủ</a>
+      <a class="tab-btn" href="#thu-thach">Thử thách số</a>
+      <a class="tab-btn" href="#ky-nang">4 Nhóm kỹ năng</a>
+      <a class="tab-btn" href="#bai-viet">Cẩm nang &amp; Cảnh báo</a>
+      <a id="map-link" class="tab-btn map-btn" href="#">📍 Bản đồ số Bờ Ngoong</a>
+    </nav>
+  </div>
+
+  <main class="container">
+    <section class="card challenge-card" id="thu-thach">
+      <span class="pill-label">THỬ THÁCH CÔNG DÂN SỐ</span>
+      <h2>Mỗi người dân là một Công dân số gương mẫu</h2>
+      <p>Tham gia bộ câu hỏi tình huống thực tế nhận diện chiêu trò lừa đảo qua mạng và sử dụng VNeID an toàn.</p>
+      <button id="start-quiz-btn" class="btn-gold" type="button">Bắt đầu thử thách ngay (5 câu) →</button>
+    </section>
+
+    <section id="ky-nang">
+      <div class="section-head">
+        <h3>4 Nhóm kỹ năng cốt lõi bà con cần nắm</h3>
+      </div>
+      <div class="skills-grid">
+        <div class="skill-item" data-skill="0">
+          <strong>1. Nhận diện cạm bẫy lừa đảo mạng</strong>
+          <span>Cuộc gọi giả danh Công an, bẫy trúng thưởng, tệp mã độc APK và mã QR lạ.</span>
+        </div>
+        <div class="skill-item" data-skill="1">
+          <strong>2. Kỹ năng an toàn tài khoản</strong>
+          <span>Đặt mật khẩu mạnh, bật xác thực 2 lớp, tuyệt đối không cung cấp mã OTP.</span>
+        </div>
+        <div class="skill-item" data-skill="2">
+          <strong>3. Tiện ích Dịch vụ công &amp; VNeID</strong>
+          <span>Tích hợp giấy tờ, tài khoản an sinh xã hội và định danh điện tử mức 2.</span>
+        </div>
+        <div class="skill-item" data-skill="3">
+          <strong>4. Tra cứu điểm phục vụ tại thôn/làng</strong>
+          <span>Xem nhanh lịch thu nhận CCCD, hỗ trợ VNeID và nhà văn hóa trên Bản đồ số.</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="stats-bar" aria-label="Thông tin phục vụ">
+      <div class="stats-title">ĐỒNG HÀNH CHUYỂN ĐỔI SỐ TẠI CƠ SỞ</div>
+      <div class="stats-grid">
+        <div>
+          <div class="stat-num" id="stat-posts">0</div>
+          <div class="stat-label">Bài viết tuyên truyền</div>
+        </div>
+        <div>
+          <div class="stat-num gold">24/7</div>
+          <div class="stat-label">Tra cứu Bản đồ số</div>
+        </div>
+        <div>
+          <div class="stat-num">VNeID</div>
+          <div class="stat-label">Hỗ trợ định danh mức 2</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="bai-viet">
+      <div class="section-head">
+        <h3>Bài viết tuyên truyền &amp; cảnh báo</h3>
+      </div>
+      <div class="filter-row" id="category-filters">
+        <button class="filter-chip active" type="button" data-cat="all">Tất cả</button>
+        <button class="filter-chip" type="button" data-cat="Cảnh báo lừa đảo">Cảnh báo lừa đảo</button>
+        <button class="filter-chip" type="button" data-cat="Kỹ năng số & VNeID">Kỹ năng số &amp; VNeID</button>
+        <button class="filter-chip" type="button" data-cat="Tuyên truyền">Tuyên truyền</button>
+      </div>
+      <div id="posts-list" class="posts-grid">Đang tải danh sách bài viết...</div>
+    </section>
+  </main>
+
+  <div id="info-modal" class="modal-backdrop" role="dialog" aria-modal="true">
+    <div class="modal-box">
+      <button id="close-modal" class="modal-close" type="button">Đóng</button>
+      <div id="modal-tag" class="pill-label"></div>
+      <h2 id="modal-title" style="margin:6px 0 10px;font-size:20px;"></h2>
+      <img id="modal-img" alt="" style="display:none;">
+      <div id="modal-body" class="modal-text"></div>
+    </div>
+  </div>
+
+  <footer>
+    Công an xã Bờ Ngoong, tỉnh Gia Lai · <a href="admin.html">Quản trị bài viết</a>
+  </footer>
+
+  <script src="config.js"></script>
+  <script>
+    (function () {
+      var cfg = window.APP_CONFIG || {};
+      document.getElementById('map-link').href = cfg.mapUrl || '#';
+
+      var modal = document.getElementById('info-modal');
+      function openModal(tag, title, bodyHtml, imgUrl) {
+        document.getElementById('modal-tag').textContent = tag;
+        document.getElementById('modal-title').textContent = title;
+        var img = document.getElementById('modal-img');
+        if (imgUrl) {
+          img.src = imgUrl;
+          img.style.display = 'block';
+        } else {
+          img.removeAttribute('src');
+          img.style.display = 'none';
+        }
+        document.getElementById('modal-body').innerHTML = bodyHtml;
+        modal.classList.add('open');
+      }
+      document.getElementById('close-modal').addEventListener('click', function () {
+        modal.classList.remove('open');
+      });
+      modal.addEventListener('click', function (e) {
+        if (e.target === modal) modal.classList.remove('open');
+      });
+
+      var skillGuides = [
+        {
+          title: 'Nhận diện cạm bẫy lừa đảo mạng',
+          body: '• Cơ quan Công an KHÔNG làm việc, không yêu cầu chuyển tiền và không gửi đường link cài ứng dụng lạ qua điện thoại/Zalo.\n• Tuyệt đối không tải tệp có đuôi .apk ngoài kho ứng dụng chính thức.\n• Không quét mã QR không rõ nguồn gốc tại nơi công cộng.'
+        },
+        {
+          title: 'Kỹ năng an toàn tài khoản',
+          body: '• Dùng mật khẩu mạnh (từ 8 ký tự trở lên, có chữ hoa, chữ thường, số và ký tự đặc biệt).\n• Bật xác thực 2 bước (2FA) cho Zalo, Facebook, tài khoản ngân hàng và VNeID.\n• Không chia sẻ mã OTP cho bất kỳ ai.'
+        },
+        {
+          title: 'Tiện ích Dịch vụ công & VNeID',
+          body: '• Kích hoạt tài khoản định danh điện tử mức 2 để tích hợp CCCD, BHYT, Giấy phép lái xe, đăng ký xe và tài khoản hưởng An sinh xã hội.\n• Nộp hồ sơ thủ tục hành chính trực tuyến trên Cổng Dịch vụ công Quốc gia.'
+        },
+        {
+          title: 'Tra cứu điểm phục vụ tại thôn/làng',
+          body: '• Bà con bấm nút "Bản đồ số Bờ Ngoong" trên thanh menu để xem vị trí nhà văn hóa thôn/làng, điểm thu nhận CCCD và lịch hỗ trợ VNeID lưu động.\n• Bấm "Chỉ đường" trên từng điểm để mở dẫn đường tới tận nơi.'
+        }
+      ];
+
+      document.querySelectorAll('.skill-item').forEach(function (card) {
+        card.addEventListener('click', function () {
+          var item = skillGuides[Number(card.getAttribute('data-skill'))];
+          if (!item) return;
+          openModal('KỸ NĂNG SỐ', item.title, item.body.replace(/\n/g, '<br>'));
+        });
+      });
+
+      var quizQuestions = [
+        {
+          q: 'Câu 1: Có người gọi điện tự xưng Công an yêu cầu bấm vào đường link lạ để "cập nhật VNeID", bạn nên làm gì?',
+          opts: ['Làm theo ngay kẻo bị khóa tài khoản', 'Tuyệt đối không bấm link, tắt máy và báo Công an xã Bờ Ngoong', 'Gửi mã OTP để họ làm giúp'],
+          ans: 1
+        },
+        {
+          q: 'Câu 2: Tệp cài đặt ứng dụng trên điện thoại Android có đuôi nào thường bị kẻ gian lợi dụng cài mã độc?',
+          opts: ['.apk gửi qua tin nhắn/Zalo', '.jpg (hình ảnh)', '.mp3 (âm thanh)'],
+          ans: 0
+        },
+        {
+          q: 'Câu 3: Mã OTP ngân hàng hoặc VNeID được phép cung cấp cho ai?',
+          opts: ['Nhân viên hỗ trợ qua điện thoại', 'Người thân quen trên mạng xã hội', 'Không cung cấp cho bất kỳ ai'],
+          ans: 2
+        },
+        {
+          q: 'Câu 4: Để tra cứu điểm hỗ trợ VNeID và thu nhận CCCD tại xã Bờ Ngoong, bà con dùng mục nào?',
+          opts: ['Bản đồ số Bờ Ngoong', 'Trang mua sắm trực tuyến', 'Trò chơi trên mạng'],
+          ans: 0
+        },
+        {
+          q: 'Câu 5: Khi nhận tin nhắn trúng thưởng yêu cầu đóng "phí nhận quà" trước, đó là dấu hiệu gì?',
+          opts: ['Khuyến mãi hợp pháp', 'Thủ đoạn lừa đảo chiếm đoạt tài sản', 'Thông báo của cơ quan nhà nước'],
+          ans: 1
+        }
+      ];
+
+      function runQuiz(index, score) {
+        if (index >= quizQuestions.length) {
+          var summary = '<p><strong>Bạn trả lời đúng ' + score + '/' + quizQuestions.length + ' câu!</strong></p>' +
+            '<p>Hãy chia sẻ kiến thức phòng chống lừa đảo và kỹ năng sử dụng VNeID tới người thân trong gia đình nhé.</p>';
+          openModal('HOÀN THÀNH THỬ THÁCH', 'Chúc mừng Công dân số Bờ Ngoong!', summary);
+          return;
+        }
+        var current = quizQuestions[index];
+        var html = '<p><strong>' + current.q + '</strong></p>';
+        current.opts.forEach(function (opt, idx) {
+          html += '<button type="button" class="quiz-option" data-idx="' + idx + '">' + opt + '</button>';
+        });
+        openModal('THỬ THÁCH (' + (index + 1) + '/' + quizQuestions.length + ')', 'Kiểm tra kỹ năng Công dân số', html);
+        document.querySelectorAll('#modal-body .quiz-option').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            var chosen = Number(btn.getAttribute('data-idx'));
+            runQuiz(index + 1, score + (chosen === current.ans ? 1 : 0));
+          });
+        });
+      }
+
+      document.getElementById('start-quiz-btn').addEventListener('click', function () {
+        runQuiz(0, 0);
+      });
+
+      var allPosts = [];
+      var selectedCat = 'all';
+
+      function escapeHtml(text) {
+        var div = document.createElement('div');
+        div.textContent = text || '';
+        return div.innerHTML;
+      }
+
+      function renderPosts() {
+        var box = document.getElementById('posts-list');
+        var list = allPosts.filter(function (p) {
+          return selectedCat === 'all' || p.category === selectedCat;
+        });
+        box.innerHTML = '';
+        if (!list.length) {
+          box.innerHTML = '<p style="color:#5a6d63;">Chưa có bài viết nào trong chuyên mục này.</p>';
+          return;
+        }
+        list.forEach(function (post) {
+          var card = document.createElement('article');
+          card.className = 'post-card';
+          if (post.imageUrl) {
+            var img = document.createElement('img');
+            img.className = 'post-thumb';
+            img.src = post.imageUrl;
+            img.alt = post.title;
+            card.appendChild(img);
+          }
+          var body = document.createElement('div');
+          body.className = 'post-body';
+
+          var tag = document.createElement('span');
+          tag.className = 'pill-label';
+          tag.textContent = post.category || 'Tuyên truyền';
+
+          var h4 = document.createElement('h4');
+          h4.textContent = post.title;
+
+          var p = document.createElement('p');
+          p.textContent = post.summary || (post.content ? post.content.slice(0, 120) + '...' : '');
+
+          var btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'read-btn';
+          btn.textContent = 'Đọc bài viết →';
+          btn.addEventListener('click', function () {
+            openModal(
+              post.category || 'Tuyên truyền',
+              post.title,
+              escapeHtml(post.content),
+              post.imageUrl
+            );
+          });
+
+          body.appendChild(tag);
+          body.appendChild(h4);
+          body.appendChild(p);
+          body.appendChild(btn);
+          card.appendChild(body);
+          box.appendChild(card);
+        });
+      }
+
+      document.getElementById('category-filters').addEventListener('click', function (e) {
+        var btn = e.target.closest('[data-cat]');
+        if (!btn) return;
+        selectedCat = btn.getAttribute('data-cat');
+        document.querySelectorAll('#category-filters .filter-chip').forEach(function (chip) {
+          chip.classList.toggle('active', chip === btn);
+        });
+        renderPosts();
+      });
+
+      fetch(cfg.apiUrl + '?action=getPublicPosts')
+        .then(function (res) { return res.json(); })
+        .then(function (data) {
+          allPosts = (data && data.posts) || [];
+          document.getElementById('stat-posts').textContent = allPosts.length;
+          renderPosts();
+        })
+        .catch(function () {
+          document.getElementById('posts-list').innerHTML =
+            '<p style="color:#b91c1c;">Không tải được bài viết. Hãy kiểm tra lại quyền triển khai Web App.</p>';
+        });
+    })();
+  </script>
+</body>
+</html>
