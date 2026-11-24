@@ -669,6 +669,36 @@
       .btn-gold { width: 100%; min-width: 0; }
       .stats-grid { grid-template-columns: repeat(3, 1fr); }
     }
+    /* Video tuyên truyền */
+    .video-section { margin-bottom: 22px; }
+    .video-frame {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      border-radius: 16px;
+      overflow: hidden;
+      background: #0b1f33 center / cover no-repeat;
+      box-shadow: var(--shadow);
+    }
+    .video-frame.vertical { aspect-ratio: 9 / 16; max-width: 360px; margin: 0 auto; }
+    .video-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+    .video-section.is-vertical .video-caption,
+    .video-section.is-vertical .video-note { text-align: center; }
+    .video-caption { margin: 8px 2px 0; font-weight: 700; color: var(--green-dark); }
+    .video-note { margin: 4px 2px 0; font-size: 13px; color: #5a6d63; }
+    .video-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 14px; }
+    .video-thumb {
+      position: relative; display: block; width: 100%; aspect-ratio: 16 / 9; padding: 0;
+      border: 1px solid var(--line); border-radius: 14px; overflow: hidden; cursor: pointer;
+      background: #0b1f33 center / cover no-repeat;
+    }
+    .video-thumb::after {
+      content: "▶"; position: absolute; inset: 0; display: grid; place-items: center;
+      font-size: 34px; color: #fff; background: rgba(0,0,0,.25);
+    }
+    .video-thumb.vertical { aspect-ratio: 9 / 16; }
+    iframe.video-thumb { border: 0; }
+    @media (max-width: 640px) { .video-list { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
@@ -729,6 +759,16 @@
       </div>
     </section>
 
+    <section id="video" class="video-section" aria-label="Video tuyên truyền">
+      <div class="section-head">
+        <h3>Video tuyên truyền</h3>
+      </div>
+      <div class="video-frame" id="video-main"></div>
+      <p class="video-caption" id="video-main-title"></p>
+      <p class="video-note">🔊 Video tự phát không có tiếng. Chạm vào biểu tượng loa trên video để bật tiếng.</p>
+      <div class="video-list" id="video-list"></div>
+    </section>
+
     <section class="stats-bar" aria-label="Thông tin phục vụ">
       <div class="stats-title">ĐỒNG HÀNH CHUYỂN ĐỔI SỐ TẠI CƠ SỞ</div>
       <div class="stats-grid">
@@ -783,6 +823,81 @@
   <script>
     (function () {
       var cfg = window.APP_CONFIG || {};
+
+      // Video tuyên truyền: video đầu tự phát (tắt tiếng) khi cuộn tới, dừng khi cuộn qua.
+      (function setupVideos() {
+        var section = document.getElementById('video');
+        var videos = (cfg.videos || []).filter(function (v) {
+          return v && /^[\w-]{11}$/.test(v.id);
+        });
+        if (!section) return;
+        if (!videos.length) { section.style.display = 'none'; return; }
+
+        var embedBase = 'https://www.youtube-nocookie.com/embed/';
+        var main = videos[0];
+        var mainBox = document.getElementById('video-main');
+        mainBox.style.backgroundImage = 'url("https://i.ytimg.com/vi/' + main.id + '/hqdefault.jpg")';
+        if (main.vertical) {
+          mainBox.classList.add('vertical');
+          section.classList.add('is-vertical');
+        }
+        document.getElementById('video-main-title').textContent = main.title || '';
+        var mainFrame = null;
+
+        function sendCommand(func) {
+          if (mainFrame && mainFrame.contentWindow) {
+            mainFrame.contentWindow.postMessage(JSON.stringify({ event: 'command', func: func, args: [] }), '*');
+          }
+        }
+        function loadMain() {
+          mainFrame = document.createElement('iframe');
+          mainFrame.src = embedBase + main.id + '?autoplay=1&mute=1&playsinline=1&loop=1&playlist=' +
+            main.id + '&rel=0&modestbranding=1&enablejsapi=1';
+          mainFrame.title = main.title || 'Video tuyên truyền';
+          mainFrame.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+          mainFrame.allowFullscreen = true;
+          mainBox.appendChild(mainFrame);
+        }
+        if ('IntersectionObserver' in window) {
+          new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+              if (entry.isIntersecting) {
+                if (!mainFrame) loadMain(); else sendCommand('playVideo');
+              } else if (mainFrame) {
+                sendCommand('pauseVideo');
+              }
+            });
+          }, { threshold: 0.5 }).observe(mainBox);
+        } else {
+          loadMain();
+        }
+
+        // Các video còn lại: chỉ tải và phát khi người xem bấm vào.
+        var list = document.getElementById('video-list');
+        videos.slice(1).forEach(function (v) {
+          var wrap = document.createElement('div');
+          var btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'video-thumb' + (v.vertical ? ' vertical' : '');
+          btn.style.backgroundImage = 'url("https://i.ytimg.com/vi/' + v.id + '/hqdefault.jpg")';
+          btn.setAttribute('aria-label', 'Phát video: ' + (v.title || ''));
+          btn.addEventListener('click', function () {
+            var f = document.createElement('iframe');
+            f.src = embedBase + v.id + '?autoplay=1&playsinline=1&rel=0&modestbranding=1';
+            f.title = v.title || 'Video tuyên truyền';
+            f.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+            f.allowFullscreen = true;
+            btn.replaceWith(f);
+            f.className = 'video-thumb' + (v.vertical ? ' vertical' : '');
+          }, { once: true });
+          var cap = document.createElement('p');
+          cap.className = 'video-caption';
+          cap.textContent = v.title || '';
+          wrap.appendChild(btn);
+          wrap.appendChild(cap);
+          list.appendChild(wrap);
+        });
+      })();
       document.getElementById('map-link').href = cfg.mapUrl || '#';
       document.getElementById('open-map-feature').addEventListener('click', function () {
         if (cfg.mapUrl) window.open(cfg.mapUrl, '_blank', 'noopener');
