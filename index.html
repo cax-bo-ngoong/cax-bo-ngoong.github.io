@@ -745,8 +745,8 @@
           <div class="stat-label">Hỗ trợ định danh mức 2</div>
         </div>
         <div>
-          <div class="stat-num gold" id="stat-participants">0</div>
-          <div class="stat-label">Người đã tham gia</div>
+          <div class="stat-num gold" id="stat-quiz">0</div>
+          <div class="stat-label">Câu hỏi thử thách</div>
         </div>
       </div>
     </section>
@@ -871,10 +871,6 @@
 
       function runQuiz(index, score) {
         if (index >= quizQuestions.length) {
-          var participantKey = 'bongoong-participant-count';
-          var participantCount = Number(localStorage.getItem(participantKey) || 0) + 1;
-          localStorage.setItem(participantKey, String(participantCount));
-          document.getElementById('stat-participants').textContent = participantCount;
           var summary = '<p><strong>Bạn trả lời đúng ' + score + '/' + quizQuestions.length + ' câu!</strong></p>' +
             '<p>Hãy chia sẻ kiến thức phòng chống lừa đảo và kỹ năng sử dụng VNeID tới người thân trong gia đình nhé.</p>';
           openModal('HOÀN THÀNH THỬ THÁCH', 'Chúc mừng Công dân số Bờ Ngoong!', summary);
@@ -1045,21 +1041,21 @@
         })
         .filter(function(post) { return post.published !== false; });
       renderPosts();
-      document.getElementById('stat-posts').textContent = allPosts.length;
-      var savedParticipants = Number(localStorage.getItem('bongoong-participant-count') || 0);
-      document.getElementById('stat-participants').textContent =
-        savedParticipants > 0 ? savedParticipants : '0';
+      // Số liệu thống kê chỉ hiện khi lấy được từ máy chủ, không dùng số dự phòng.
+      document.getElementById('stat-posts').textContent = '...';
+      document.getElementById('stat-quiz').textContent = quizQuestions.length;
 
       fetch(cfg.apiUrl + '?action=getPublicPosts')
         .then(function (res) { return res.json(); })
         .then(function (data) {
-          allPosts = (data && data.posts && data.posts.length) ? data.posts : fallbackPosts;
-          document.getElementById('stat-posts').textContent = allPosts.length;
+          var hasPosts = !!(data && data.posts && data.posts.length);
+          allPosts = hasPosts ? data.posts : fallbackPosts;
+          document.getElementById('stat-posts').textContent = hasPosts ? data.posts.length : '--';
           renderPosts();
         })
         .catch(function () {
           allPosts = fallbackPosts;
-          document.getElementById('stat-posts').textContent = allPosts.length;
+          document.getElementById('stat-posts').textContent = '--';
           renderPosts();
         });
     })();
