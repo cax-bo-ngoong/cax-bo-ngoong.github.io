@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cuộc thi - Công an xã Bờ Ngoong</title>
+  <style>
+    :root {
+      --police: #145da0;
+      --police-dark: #092f5b;
+      --gold: #f5c451;
+      --bg: #eef4f8;
+      --ink: #10253a;
+      --muted: #60748a;
+      --line: #d6e2ec;
+      --green: #16834b;
+      --red: #b91c1c;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 100% 0, rgba(20,93,160,.12), transparent 22rem),
+        linear-gradient(180deg, #f7fafc, var(--bg));
+    }
+    .topbar {
+      background: linear-gradient(115deg, var(--police-dark), var(--police));
+      color: #fff;
+      padding: 22px 16px;
+    }
+    .topbar-inner {
+      max-width: 980px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .emblem {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      border: 2px solid #fff;
+      background: #fff;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .emblem img { width: 100%; height: 100%; object-fit: cover; }
+    .unit-avatar {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      border: 2px solid #fff;
+      background: #fff;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .unit-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .identity { display: flex; align-items: center; gap: 12px; }
+    .topbar h1 { margin: 0; font-size: 25px; }
+    .topbar p { margin: 4px 0 0; color: #dceafd; }
+    .nav-wrap {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: #fff;
+      border-bottom: 1px solid var(--line);
+      box-shadow: 0 4px 18px rgba(9,47,91,.07);
+    }
+    .nav-tabs {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 12px 16px;
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+    }
+    .tab-btn {
+      display: inline-flex;
+      align-items: center;
+      padding: 9px 13px;
+      border: 1px solid #cdddea;
+      border-radius: 10px;
+      color: #2d4f70;
+      background: #fff;
+      text-decoration: none;
+      white-space: nowrap;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .tab-btn.active {
+      color: #fff;
+      background: var(--police);
+      border-color: var(--police);
+    }
+    main {
+      max-width: 980px;
+      margin: 24px auto 40px;
+      padding: 0 16px;
+    }
+    .page-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+    .page-head h2 { margin: 0 0 5px; color: var(--police-dark); }
+    .page-head p { margin: 0; color: var(--muted); }
+    .filter-row { display: flex; gap: 8px; }
+    .filter-btn {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #fff;
+      padding: 7px 12px;
+      color: var(--ink);
+      cursor: pointer;
+      font-weight: 700;
+    }
+    .filter-btn.active {
+      background: var(--police-soft, #e9f2fb);
+      border-color: var(--police);
+      color: var(--police-dark);
+    }
+    .contest-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+    .contest-card {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: #fff;
+      overflow: hidden;
+      box-shadow: 0 12px 32px rgba(20,93,160,.10);
+      transition: transform .18s, box-shadow .18s;
+    }
+    .contest-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 16px 36px rgba(20,93,160,.15);
+    }
+    .contest-banner {
+      min-height: 118px;
+      display: flex;
+      align-items: flex-end;
+      padding: 16px;
+      color: #fff;
+      background:
+        linear-gradient(125deg, rgba(9,47,91,.96), rgba(20,93,160,.88));
+    }
+    .contest-card.ended .contest-banner {
+      background: linear-gradient(125deg, #4b5c6b, #7b8e9d);
+    }
+    .status {
+      display: inline-block;
+      margin-bottom: 8px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: #daf7e6;
+      color: #11643a;
+      font-size: 11px;
+      font-weight: 800;
+    }
+    .ended .status { background: #edf1f4; color: #536271; }
+    .contest-banner h3 { margin: 0; font-size: 19px; line-height: 1.35; }
+    .contest-body { padding: 16px; }
+    .contest-body p { min-height: 44px; margin: 0 0 14px; color: var(--muted); font-size: 14px; }
+    .contest-meta {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 14px;
+      padding: 10px;
+      border-radius: 10px;
+      background: #f5f8fb;
+      font-size: 12px;
+    }
+    .contest-meta strong { display: block; color: var(--police-dark); font-size: 13px; }
+    .join-btn {
+      display: block;
+      width: 100%;
+      border: 0;
+      border-radius: 10px;
+      padding: 11px 14px;
+      background: linear-gradient(90deg, var(--police-dark), var(--police));
+      color: #fff;
+      text-align: center;
+      text-decoration: none;
+      font-weight: 800;
+    }
+    .ended .join-btn { background: #a6b3bf; pointer-events: none; }
+    .quiz-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 80;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      background: rgba(9,47,91,.68);
+    }
+    .quiz-backdrop.open { display: flex; }
+    .quiz-modal {
+      width: 100%;
+      max-width: 620px;
+      max-height: 88vh;
+      overflow: auto;
+      border-radius: 18px;
+      border-top: 5px solid var(--gold);
+      background: #fff;
+      padding: 22px;
+      box-shadow: 0 20px 50px rgba(0,0,0,.25);
+    }
+    .quiz-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: flex-start;
+      margin-bottom: 14px;
+    }
+    .quiz-top h3 { margin: 0; color: var(--police-dark); }
+    .quiz-close {
+      border: 0;
+      border-radius: 8px;
+      background: #edf3f7;
+      padding: 7px 11px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+    .quiz-progress { color: var(--muted); font-size: 12px; margin-bottom: 8px; }
+    .quiz-question { margin: 0 0 12px; line-height: 1.45; }
+    .quiz-option {
+      display: block;
+      width: 100%;
+      margin: 8px 0;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fff;
+      padding: 11px 12px;
+      color: var(--ink);
+      text-align: left;
+      cursor: pointer;
+      font-weight: 700;
+    }
+    .quiz-option:hover { border-color: var(--police); background: #f5f9fc; }
+    .empty { color: var(--muted); }
+    footer {
+      padding: 20px 16px;
+      text-align: center;
+      background: var(--police-dark);
+      color: #d4e4f3;
+      font-size: 12px;
+    }
+    @media (max-width: 640px) {
+      .topbar-inner { align-items: flex-start; }
+      .topbar h1 { font-size: 19px; }
+      .emblem { width: 54px; height: 54px; }
+      .unit-avatar { width: 54px; height: 54px; }
+      .identity { gap: 8px; }
+      .page-head { align-items: flex-start; flex-direction: column; }
+      .contest-grid { grid-template-columns: 1fr; }
+      .nav-tabs { padding-inline: 10px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="identity">
+        <div class="emblem">
+          <img src="Screenshot%202026-11-24%20123139.png" alt="Huy hiệu Công an nhân dân">
+        </div>
+        <div class="unit-avatar">
+          <img src="84e029e9-5834-48bd-9a77-b8a442ad11fd.jfif" alt="Công an xã Bờ Ngoong">
+        </div>
+      </div>
+      <div>
+        <h1>CÔNG AN XÃ BỜ NGOONG</h1>
+        <p>Tuyên truyền pháp luật · Kỹ năng số · Phục vụ nhân dân</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="nav-wrap">
+    <nav class="nav-tabs" aria-label="Điều hướng chính">
+      <a class="tab-btn" href="index.html">Trang chủ</a>
+      <a class="tab-btn" href="index.html#thu-thach">Thử thách số</a>
+      <a class="tab-btn active" href="contests.html">Cuộc thi</a>
+      <a class="tab-btn" href="index.html#ky-nang">4 Nhóm kỹ năng</a>
+      <a class="tab-btn" href="index.html#bai-viet">Cẩm nang &amp; Cảnh báo</a>
+      <a class="tab-btn" id="map-link" href="#">📍 Bản đồ số Bờ Ngoong</a>
+    </nav>
+  </div>
+
+  <main>
+    <div class="page-head">
+      <div>
+        <h2>Cuộc thi đang diễn ra</h2>
+        <p>Tổng hợp các hoạt động thi trực tuyến dành cho bà con và học sinh</p>
+      </div>
+      <div class="filter-row" aria-label="Lọc cuộc thi">
+        <button class="filter-btn active" type="button" data-filter="all">Tất cả</button>
+        <button class="filter-btn" type="button" data-filter="active">Đang thi</button>
+        <button class="filter-btn" type="button" data-filter="ended">Đã kết thúc</button>
+      </div>
+    </div>
+
+    <div class="contest-grid" id="contest-grid">
+      <p class="empty" id="loading-contests">Đang tải danh sách cuộc thi...</p>
+    </div>
+  </main>
+
+  <footer>Công an xã Bờ Ngoong, tỉnh Gia Lai · <a href="admin.html" style="color:#ffe49a;font-weight:700;">Quản trị bài viết</a></footer>
+
+  <div class="quiz-backdrop" id="quiz-backdrop" role="dialog" aria-modal="true">
+    <div class="quiz-modal">
+      <div class="quiz-top">
+        <h3 id="quiz-title">Cuộc thi</h3>
+        <button class="quiz-close" id="quiz-close" type="button">Đóng</button>
+      </div>
+      <div id="quiz-content"></div>
+    </div>
+  </div>
+
+  <script src="config.js"></script>
+  <script>
+    (function () {
+      var cfg = window.APP_CONFIG || {};
+      document.getElementById('map-link').href = cfg.mapUrl || '#';
+      var fallbackContests = [
+        { id:'CT001', title:'Nhận diện cuộc gọi giả danh Công an', description:'Nhận biết và xử lý cuộc gọi giả danh lực lượng Công an yêu cầu chuyển tiền.', organizer:'Công an xã Bờ Ngoong', status:'active', startDate:'2026-11-24', endDate:'2026-12-31', published:true, questions:[{q:'Người tự xưng là Công an gọi yêu cầu chuyển tiền để phục vụ điều tra, bạn nên làm gì?',options:['Chuyển tiền ngay','Tắt máy, xác minh qua số Công an địa phương'],answer:1},{q:'Cơ quan Công an có làm việc qua video gọi hoặc yêu cầu bí mật tài khoản không?',options:['Không','Có'],answer:0}] },
+        { id:'CT002', title:'An toàn tài khoản ngân hàng', description:'Củng cố kiến thức về mật khẩu, OTP và tài khoản thanh toán.', organizer:'Công an xã Bờ Ngoong', status:'active', startDate:'2026-11-24', endDate:'2026-12-31', published:true, questions:[{q:'Ai được phép biết mã OTP của bạn?',options:['Nhân viên ngân hàng qua điện thoại','Không ai'],answer:1},{q:'Khi nhận tin nhắn yêu cầu cài ứng dụng quản lý tài khoản, bạn nên làm gì?',options:['Không cài và kiểm tra trực tiếp ngân hàng','Cài ngay để nhận hỗ trợ'],answer:0}] },
+        { id:'CT003', title:'Phân biệt tin nhắn trúng thưởng', description:'Nhận diện tin nhắn trúng thưởng giả mạo và yêu cầu đóng phí.', organizer:'Công an xã Bờ Ngoong', status:'active', startDate:'2026-11-24', endDate:'2026-12-31', published:true, questions:[{q:'Tin nhắn nói bạn trúng thưởng nhưng yêu cầu nộp phí trước, đó là gì?',options:['Dấu hiệu lừa đảo','Chương trình khuyến mãi chắc chắn'],answer:0},{q:'Khi nhận tin trúng thưởng lạ, bà con nên làm gì?',options:['Nhấn link trong tin nhắn','Bỏ qua và kiểm tra qua nguồn chính thức'],answer:1}] },
+        { id:'CT004', title:'Sử dụng VNeID an toàn', description:'Hướng dẫn bảo vệ tài khoản định danh điện tử và dữ liệu cá nhân.', organizer:'Công an xã Bờ Ngoong', status:'active', startDate:'2026-11-24', endDate:'2026-12-31', published:true, questions:[{q:'Ai được phép biết mật khẩu tài khoản VNeID của bạn?',options:['Chỉ mình bạn','Nhân viên hỗ trợ qua điện thoại'],answer:0},{q:'Khi có người yêu cầu cung cấp mã xác thực VNeID, bạn nên làm gì?',options:['Cung cấp để họ hỗ trợ','Không cung cấp và liên hệ cơ quan có thẩm quyền'],answer:1}] },
+        { id:'CT005', title:'Nhận diện mã QR giả', description:'Phòng tránh quét mã QR lạ trong tin nhắn, quảng cáo hoặc nơi công cộng.', organizer:'Công an xã Bờ Ngoong', status:'active', startDate:'2026-11-24', endDate:'2026-12-31', published:true, questions:[{q:'Quét mã QR lạ có thể dẫn đến rủi ro nào?',options:['Chỉ xem được quảng cáo','Bị chuyển tiền hoặc đánh cắp dữ liệu'],answer:1},{q:'Trước khi quét mã QR, bạn nên làm gì?',options:['Kiểm tra nguồn gốc và mục đích','Quét ngay'],answer:0}] },
+        { id:'CT006', title:'Không tải file APK lạ', description:'Nhận diện mã độc trong file APK và đường dẫn cài ứng dụng ngoài kho chính thức.', organizer:'Công an xã Bờ Ngoong', status:'active', startDate:'2026-11-24', endDate:'2026-12-31', published:true, questions:[{q:'File APK gửi qua Zalo từ người lạ thường có nguy cơ gì?',options:['Cài mã độc, chiếm tài khoản','Luôn an toàn'],answer:0},{q:'Nên tải ứng dụng ở đâu?',options:['Kho ứng dụng chính thức','Link tin nhắn lạ'],answer:0}] },
+        { id:'CT007', title:'Chống lừa đảo mua bán trực tuyến', description:'Học cách kiểm tra người bán và không đặt cọc khi mua hàng qua mạng.', organizer:'Công an xã Bờ Ngoong', status:'active', startDate:'2026-11-24', endDate:'2026-12-31', published:true, questions:[{q:'Người bán yêu cầu chuyển cọc toàn bộ tiền trước khi giao hàng, bạn nên làm gì?',options:['Cẩn trọng và không chuyển nếu chưa xác minh','Chuyển ngay'],answer:0},{q:'Nên mua hàng trực tuyến ở đâu?',options:['Sàn thương mại hoặc nơi rõ nguồn gốc','Trang web không rõ chủ quản'],answer:0}] },
+        { id:'CT008', title:'Bảo vệ thông tin cá nhân', description:'Nhận biết hành vi yêu cầu CCCD, ảnh giấy tờ và tài khoản mạng xã hội.', organizer:'Công an xã Bờ Ngoong', status:'active', startDate:'2026-11-24', endDate:'2026-12-31', published:true, questions:[{q:'Ai được phép yêu cầu ảnh CCCD để làm thủ tục chính thức?',options:['Cơ quan, tổ chức có thẩm quyền','Bất kỳ người gọi điện'],answer:0},{q:'Có nên công khai số tài khoản và giấy tờ trên mạng xã hội không?',options:['Không','Có'],answer:0}] },
+        { id:'CT009', title:'Kỹ năng báo tin lừa đảo', description:'Biết khi nào nên lưu bằng chứng, tắt máy và báo cơ quan Công an.', organizer:'Công an xã Bờ Ngoong', status:'active', startDate:'2026-11-24', endDate:'2026-12-31', published:true, questions:[{q:'Khi nghi ngờ bị lừa đảo, cần lưu lại những bằng chứng nào?',options:['Tin nhắn, số điện thoại, lịch sử giao dịch','Không lưu lại'],answer:0},{q:'Sau khi phát hiện bị chiếm đoạt tài sản, bà con nên làm gì?',options:['Khóa tài khoản, báo ngân hàng và Công an','Không báo ai'],answer:0}] },
+        { id:'CT010', title:'Công dân số Bờ Ngoong', description:'Tổng hợp kiến thức chuyển đổi số an toàn dành cho người dân địa phương.', organizer:'Công an xã Bờ Ngoong', status:'active', startDate:'2026-11-24', endDate:'2026-12-31', published:true, questions:[{q:'Công dân số cần làm gì để phòng lừa đảo?',options:['Cảnh giác, xác minh thông tin trước khi làm theo','Tin mọi tin nhắn'],answer:0},{q:'Khi không chắc thông tin đúng hay sai, bà con nên làm gì?',options:['Tra cứu nguồn chính thống hoặc hỏi Công an xã','Chia sẻ ngay cho người khác'],answer:0}] }
+      ];
+
+      function escapeHtml(value) {
+        var div = document.createElement('div');
+        div.textContent = value || '';
+        return div.innerHTML;
+      }
+
+      function parseQuestions(value) {
+        if (Array.isArray(value)) return value;
+        if (!value) return [];
+        try {
+          var parsed = JSON.parse(value);
+          return Array.isArray(parsed) ? parsed : [];
+        } catch (error) {
+          return [];
+        }
+      }
+
+      function openQuiz(contest) {
+        var questions = parseQuestions(contest.questions);
+        if (!questions.length) {
+          if (contest.link) {
+            window.open(contest.link, '_blank', 'noopener');
+          } else {
+            alert('Cuộc thi này chưa có câu hỏi trực tuyến.');
+          }
+          return;
+        }
+
+        var backdrop = document.getElementById('quiz-backdrop');
+        var content = document.getElementById('quiz-content');
+        document.getElementById('quiz-title').textContent = contest.title;
+        var index = 0;
+        var score = 0;
+
+        function renderQuestion() {
+          if (index >= questions.length) {
+            content.innerHTML =
+              '<p class="quiz-progress">HOÀN THÀNH CUỘC THI</p>' +
+              '<h4>Kết quả: ' + score + '/' + questions.length + ' câu đúng</h4>' +
+              '<p>Cảm ơn bà con đã tham gia tuyên truyền và học tập kỹ năng số.</p>';
+            return;
+          }
+
+          var question = questions[index];
+          var html = '<div class="quiz-progress">Câu ' + (index + 1) + '/' + questions.length + '</div>' +
+            '<h4 class="quiz-question">' + escapeHtml(question.q) + '</h4>';
+          (question.options || []).forEach(function (option, optionIndex) {
+            html += '<button class="quiz-option" type="button" data-answer="' + optionIndex + '">' +
+              escapeHtml(option) + '</button>';
+          });
+          content.innerHTML = html;
+          content.querySelectorAll('.quiz-option').forEach(function (button) {
+            button.addEventListener('click', function () {
+              if (Number(button.getAttribute('data-answer')) === Number(question.answer)) score++;
+              index++;
+              renderQuestion();
+            });
+          });
+        }
+
+        backdrop.classList.add('open');
+        renderQuestion();
+      }
+
+      document.getElementById('quiz-close').addEventListener('click', function () {
+        document.getElementById('quiz-backdrop').classList.remove('open');
+      });
+
+      document.getElementById('quiz-backdrop').addEventListener('click', function (event) {
+        if (event.target.id === 'quiz-backdrop') {
+          event.target.classList.remove('open');
+        }
+      });
+
+      function renderContests(contests) {
+        var grid = document.getElementById('contest-grid');
+        grid.innerHTML = '';
+        if (!contests.length) {
+          grid.innerHTML = '<p class="empty">Chưa có cuộc thi nào được công khai.</p>';
+          return;
+        }
+        contests.forEach(function (contest) {
+          var ended = contest.status === 'ended';
+          var card = document.createElement('article');
+          card.className = 'contest-card' + (ended ? ' ended' : '');
+          card.setAttribute('data-status', ended ? 'ended' : 'active');
+          var startText = contest.startDate ? 'Từ ' + contest.startDate : 'Sắp công bố';
+          var endText = contest.endDate ? ' đến ' + contest.endDate : '';
+          card.innerHTML =
+            '<div class="contest-banner"><div>' +
+            '<span class="status">' + (ended ? 'ĐÃ KẾT THÚC' : 'ĐANG DIỄN RA') + '</span>' +
+            '<h3>' + escapeHtml(contest.title) + '</h3></div></div>' +
+            '<div class="contest-body">' +
+            '<p>' + escapeHtml(contest.description) + '</p>' +
+            '<div class="contest-meta">' +
+            '<div>Thời gian<strong>' + escapeHtml(startText + endText) + '</strong></div>' +
+            '<div>Đơn vị tổ chức<strong>' + escapeHtml(contest.organizer || 'Công an xã Bờ Ngoong') + '</strong></div>' +
+            '</div>' +
+            '<button class="join-btn" type="button">' +
+            (ended ? 'Cuộc thi đã kết thúc' : 'Tham gia ngay →') + '</button></div>';
+          if (!ended) {
+            card.querySelector('.join-btn').addEventListener('click', function () {
+              openQuiz(contest);
+            });
+          }
+          grid.appendChild(card);
+        });
+      }
+
+      renderContests(fallbackContests);
+
+      fetch(cfg.apiUrl + '?action=getPublicContests')
+        .then(function (response) { return response.json(); })
+        .then(function (data) {
+          var contests = (data && data.contests) || [];
+          renderContests(contests.length ? contests : fallbackContests);
+        })
+        .catch(function () {
+          renderContests(fallbackContests);
+        });
+
+      document.querySelectorAll('.filter-btn').forEach(function (button) {
+        button.addEventListener('click', function () {
+          var filter = button.getAttribute('data-filter');
+          document.querySelectorAll('.filter-btn').forEach(function (item) {
+            item.classList.toggle('active', item === button);
+          });
+          var visible = 0;
+          document.querySelectorAll('.contest-card').forEach(function (card) {
+            var show = filter === 'all' || card.getAttribute('data-status') === filter;
+            card.style.display = show ? '' : 'none';
+            if (show) visible++;
+          });
+          var grid = document.getElementById('contest-grid');
+          var empty = document.getElementById('empty-result');
+          if (!empty) {
+            empty = document.createElement('p');
+            empty.id = 'empty-result';
+            empty.className = 'empty';
+            grid.appendChild(empty);
+          }
+          empty.textContent = visible ? '' : 'Chưa có cuộc thi thuộc mục này.';
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

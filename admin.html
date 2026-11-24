@@ -59,12 +59,122 @@
     .hidden { display: none; }
     #msg { margin-bottom: 12px; font-weight: 700; color: #0b6337; }
     #msg.err { color: #b91c1c; }
+    :root {
+      --police: #145da0;
+      --police-dark: #092f5b;
+      --police-soft: #eaf2f9;
+      --gold: #f5c451;
+    }
+    body {
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 100% 0, rgba(20,93,160,.12), transparent 22rem),
+        linear-gradient(180deg, #f7fafc, #edf4f8);
+      color: #10253a;
+    }
+    .wrap { max-width: 920px; }
+    .topbar {
+      padding: 18px 20px;
+      border-radius: 18px;
+      background: linear-gradient(115deg, var(--police-dark), var(--police));
+      color: #fff;
+      box-shadow: 0 12px 30px rgba(9,47,91,.16);
+    }
+    .topbar h1 { margin: 0; font-size: 22px; letter-spacing: .3px; }
+    .admin-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+    .admin-emblem,
+    .admin-avatar {
+      width: 58px;
+      height: 58px;
+      border: 2px solid #fff;
+      border-radius: 50%;
+      background: #fff;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .admin-emblem img,
+    .admin-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .topbar a {
+      color: #ffe49a;
+      text-decoration: none;
+      font-weight: 700;
+    }
+    .topbar button {
+      color: #fff;
+      background: rgba(255,255,255,.12);
+      border-color: rgba(255,255,255,.35);
+    }
+    .card {
+      border-color: #d6e2ec;
+      border-radius: 18px;
+      box-shadow: 0 10px 28px rgba(20,93,160,.08);
+      padding: 22px;
+    }
+    h2 {
+      color: var(--police-dark);
+      font-size: 19px;
+    }
+    input, select, textarea {
+      border-color: #c9d8e5;
+      border-radius: 10px;
+      background: #fbfdff;
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: 3px solid rgba(20,93,160,.12);
+      border-color: var(--police);
+    }
+    button {
+      border-radius: 10px;
+      transition: transform .15s, box-shadow .15s;
+    }
+    button:hover { transform: translateY(-1px); }
+    .btn-primary {
+      background: linear-gradient(90deg, var(--police-dark), var(--police));
+      border: 0;
+      box-shadow: 0 7px 16px rgba(20,93,160,.18);
+    }
+    .btn-danger { border-color: #efc5c5; background: #fff5f5; }
+    .post-item { border-bottom-color: #edf2f6; }
+    .post-item strong { color: var(--police-dark); }
+    #msg {
+      padding: 10px 14px;
+      border-radius: 10px;
+      background: #eaf7ef;
+    }
+    #msg.err { background: #fff0f0; }
+    @media (max-width: 640px) {
+      body { padding: 12px 10px; }
+      .topbar { padding: 15px; }
+      .topbar h1 { font-size: 18px; }
+      .admin-emblem,
+      .admin-avatar { width: 48px; height: 48px; }
+      .admin-brand { gap: 8px; }
+      .post-item { align-items: flex-start; }
+    }
   </style>
 </head>
 <body>
   <div class="wrap">
     <div class="topbar">
-      <h1>Quản trị bài viết — Bờ Ngoong</h1>
+      <div class="admin-brand">
+        <div class="admin-emblem">
+          <img src="Screenshot%202026-11-24%20123139.png" alt="Huy hiệu Công an nhân dân">
+        </div>
+        <div class="admin-avatar">
+          <img src="84e029e9-5834-48bd-9a77-b8a442ad11fd.jfif" alt="Công an xã Bờ Ngoong">
+        </div>
+        <h1>Quản trị bài viết — Bờ Ngoong</h1>
+      </div>
       <div>
         <a href="index.html">← Về trang chủ</a>
         <button id="logout-btn" class="hidden" type="button" style="margin-left:10px;">Đăng xuất</button>
@@ -89,6 +199,60 @@
     </div>
 
     <div id="panel-box" class="hidden">
+      <div class="card">
+        <h2 id="contest-form-heading">Tạo cuộc thi mới</h2>
+        <form id="contest-form">
+          <input id="contest-id" type="hidden">
+          <div class="field">
+            <label for="contest-title">Tên cuộc thi *</label>
+            <input id="contest-title" maxlength="250" required>
+          </div>
+          <div class="field">
+            <label for="contest-description">Mô tả</label>
+            <textarea id="contest-description" style="min-height:100px"></textarea>
+          </div>
+          <div class="field">
+            <label for="contest-organizer">Đơn vị tổ chức</label>
+            <input id="contest-organizer" value="Công an xã Bờ Ngoong">
+          </div>
+          <div class="field">
+            <label for="contest-link">Link tham gia (nếu có)</label>
+            <input id="contest-link" type="url" placeholder="https://...">
+          </div>
+          <div class="field">
+            <label for="contest-questions">Câu hỏi trắc nghiệm (không cần link)</label>
+            <textarea id="contest-questions" style="min-height:180px" placeholder='[{"q":"Câu hỏi","options":["Đáp án A","Đáp án B"],"answer":0}]'></textarea>
+            <div class="muted">Nhập JSON: mỗi câu gồm q, options và answer (vị trí đáp án bắt đầu từ 0).</div>
+          </div>
+          <div class="field">
+            <label for="contest-status">Trạng thái</label>
+            <select id="contest-status">
+              <option value="active">Đang diễn ra</option>
+              <option value="ended">Đã kết thúc</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="contest-start">Ngày bắt đầu</label>
+            <input id="contest-start" type="date">
+          </div>
+          <div class="field">
+            <label for="contest-end">Ngày kết thúc</label>
+            <input id="contest-end" type="date">
+          </div>
+          <label class="row-check">
+            <input id="contest-published" type="checkbox" checked>
+            Công khai cuộc thi
+          </label>
+          <button id="contest-save-btn" class="btn-primary" type="submit">Lưu cuộc thi</button>
+          <button id="contest-cancel-btn" class="hidden" type="button">Hủy sửa</button>
+        </form>
+      </div>
+
+      <div class="card">
+        <h2>Danh sách cuộc thi</h2>
+        <div id="admin-contests">Đang tải...</div>
+      </div>
+
       <div class="card">
         <h2 id="form-heading">Đăng bài viết mới</h2>
         <form id="post-form">
@@ -138,6 +302,90 @@
       var apiUrl = (window.APP_CONFIG && window.APP_CONFIG.apiUrl) || '';
       var token = sessionStorage.getItem('bongoong-post-token') || '';
       var editingId = '';
+
+      function resetContestForm() {
+        document.getElementById('contest-form').reset();
+        document.getElementById('contest-id').value = '';
+        document.getElementById('contest-organizer').value = 'Công an xã Bờ Ngoong';
+        document.getElementById('contest-published').checked = true;
+        document.getElementById('contest-status').value = 'active';
+        document.getElementById('contest-form-heading').textContent = 'Tạo cuộc thi mới';
+        document.getElementById('contest-save-btn').textContent = 'Lưu cuộc thi';
+        document.getElementById('contest-cancel-btn').classList.add('hidden');
+      }
+
+      function startContestEdit(contest) {
+        document.getElementById('contest-id').value = contest.id;
+        document.getElementById('contest-title').value = contest.title || '';
+        document.getElementById('contest-description').value = contest.description || '';
+        document.getElementById('contest-organizer').value = contest.organizer || 'Công an xã Bờ Ngoong';
+        document.getElementById('contest-link').value = contest.link || '';
+        document.getElementById('contest-questions').value = contest.questions
+          ? (typeof contest.questions === 'string'
+            ? contest.questions
+            : JSON.stringify(contest.questions, null, 2))
+          : '';
+        document.getElementById('contest-status').value = contest.status || 'active';
+        document.getElementById('contest-start').value = contest.startDate || '';
+        document.getElementById('contest-end').value = contest.endDate || '';
+        document.getElementById('contest-published').checked = Boolean(contest.published);
+        document.getElementById('contest-form-heading').textContent = 'Đang sửa cuộc thi: ' + (contest.title || '');
+        document.getElementById('contest-save-btn').textContent = 'Cập nhật cuộc thi';
+        document.getElementById('contest-cancel-btn').classList.remove('hidden');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      function loadAdminContests() {
+        callApi({ action: 'getAllContests', token: token }).then(function (data) {
+          var box = document.getElementById('admin-contests');
+          box.innerHTML = '';
+          if (!data || !data.success) {
+            box.innerHTML = '<p class="muted">' + ((data && data.message) || 'Chưa thể tải danh sách cuộc thi.') + '</p>';
+            return;
+          }
+          if (!data.contests || !data.contests.length) {
+            box.innerHTML = '<p class="muted">Chưa có cuộc thi nào.</p>';
+            return;
+          }
+          data.contests.forEach(function (contest) {
+            var item = document.createElement('div');
+            item.className = 'post-item';
+            var info = document.createElement('div');
+            var title = document.createElement('strong');
+            title.textContent = contest.title;
+            var meta = document.createElement('div');
+            meta.className = 'muted';
+            var statusText = contest.status === 'ended' ? 'Đã kết thúc' : 'Đang diễn ra';
+            meta.textContent = statusText + ' · ' + (contest.published ? 'Đang công khai' : 'Đang ẩn');
+            info.appendChild(title);
+            info.appendChild(meta);
+
+            var actions = document.createElement('div');
+            actions.className = 'actions';
+            var editBtn = document.createElement('button');
+            editBtn.type = 'button';
+            editBtn.textContent = 'Sửa';
+            editBtn.addEventListener('click', function () { startContestEdit(contest); });
+            var deleteBtn = document.createElement('button');
+            deleteBtn.type = 'button';
+            deleteBtn.className = 'btn-danger';
+            deleteBtn.textContent = 'Xóa';
+            deleteBtn.addEventListener('click', function () {
+              if (!confirm('Xóa cuộc thi "' + contest.title + '"?')) return;
+              callApi({ action: 'deleteContest', token: token, id: contest.id }).then(function (res) {
+                if (!res || !res.success) return showMsg((res && res.message) || 'Xóa cuộc thi thất bại.', true);
+                showMsg('Đã xóa cuộc thi.');
+                loadAdminContests();
+              });
+            });
+            actions.appendChild(editBtn);
+            actions.appendChild(deleteBtn);
+            item.appendChild(info);
+            item.appendChild(actions);
+            box.appendChild(item);
+          });
+        });
+      }
 
       function showMsg(text, isErr) {
         var el = document.getElementById('msg');
@@ -255,6 +503,7 @@
           showMsg('Đăng nhập thành công.');
           setLoggedIn(true);
           loadAdminPosts();
+          loadAdminContests();
         }).catch(function () {
           showMsg('Lỗi kết nối tới máy chủ.', true);
         });
@@ -270,6 +519,55 @@
       });
 
       document.getElementById('cancel-btn').addEventListener('click', resetForm);
+
+      document.getElementById('contest-cancel-btn').addEventListener('click', resetContestForm);
+
+      document.getElementById('contest-form').addEventListener('submit', function (e) {
+        e.preventDefault();
+        var questionsText = document.getElementById('contest-questions').value.trim();
+        if (questionsText) {
+          try {
+            var questions = JSON.parse(questionsText);
+            if (!Array.isArray(questions) || questions.some(function (question) {
+              return !question.q || !Array.isArray(question.options) ||
+                question.options.length < 2 ||
+                !Number.isInteger(Number(question.answer));
+            })) {
+              throw new Error('Sai cấu trúc câu hỏi');
+            }
+          } catch (error) {
+            showMsg('Câu hỏi trắc nghiệm không đúng định dạng JSON.', true);
+            document.getElementById('contest-questions').focus();
+            return;
+          }
+        }
+        var contestPayload = {
+          title: document.getElementById('contest-title').value,
+          description: document.getElementById('contest-description').value,
+          organizer: document.getElementById('contest-organizer').value,
+          link: document.getElementById('contest-link').value,
+          questions: questionsText,
+          status: document.getElementById('contest-status').value,
+          startDate: document.getElementById('contest-start').value,
+          endDate: document.getElementById('contest-end').value,
+          published: document.getElementById('contest-published').checked
+        };
+        var id = document.getElementById('contest-id').value;
+        var request = id
+          ? callApi({ action: 'updateContest', token: token, id: id, contest: contestPayload })
+          : callApi({ action: 'saveContest', token: token, contest: contestPayload });
+        request.then(function (res) {
+          if (!res || !res.success) {
+            showMsg((res && res.message) || 'Không lưu được cuộc thi.', true);
+            return;
+          }
+          resetContestForm();
+          showMsg('Đã lưu cuộc thi thành công.');
+          loadAdminContests();
+        }).catch(function () {
+          showMsg('Lỗi khi lưu cuộc thi.', true);
+        });
+      });
 
       document.getElementById('post-form').addEventListener('submit', function (e) {
         e.preventDefault();
@@ -301,6 +599,7 @@
       if (token) {
         setLoggedIn(true);
         loadAdminPosts();
+        loadAdminContests();
       } else {
         setLoggedIn(false);
       }

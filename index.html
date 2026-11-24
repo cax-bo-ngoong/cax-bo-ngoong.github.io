@@ -384,25 +384,280 @@
       .skills-grid { grid-template-columns: 1fr; }
       .stats-grid { grid-template-columns: 1fr; }
     }
+    :root {
+      --green: #145da0;
+      --green-dark: #092f5b;
+      --green-soft: #e9f2fb;
+      --gold: #f5c451;
+      --gold-dark: #dea527;
+      --bg: #eef4f8;
+      --card: #ffffff;
+      --ink: #10253a;
+      --muted: #60748a;
+      --line: #d6e2ec;
+      --shadow: 0 12px 32px rgba(20, 93, 160, 0.10);
+    }
+    body {
+      background:
+        radial-gradient(circle at 10% 20%, rgba(20,93,160,.055), transparent 22rem),
+        linear-gradient(180deg, #f7fafc 0, var(--bg) 38rem);
+    }
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 28px 16px 34px;
+      background:
+        linear-gradient(115deg, rgba(5, 35, 72, .98), rgba(20, 93, 160, .94)),
+        #092f5b;
+      text-align: left;
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      width: 420px;
+      height: 420px;
+      right: -180px;
+      top: -260px;
+      border: 70px solid rgba(255,255,255,.055);
+      border-radius: 50%;
+      transform: rotate(15deg);
+    }
+    .hero-badge {
+      display: block;
+      width: fit-content;
+      margin: 0 auto 16px;
+      border: 1px solid rgba(245,196,81,.55);
+      background: rgba(245,196,81,.12);
+      color: #ffe7a0;
+      letter-spacing: .8px;
+    }
+    .hero-head {
+      max-width: 980px;
+      gap: 18px;
+      justify-content: flex-start;
+      position: relative;
+      z-index: 1;
+    }
+    .emblem {
+      width: 78px;
+      height: 78px;
+      border: 2px solid rgba(255, 255, 255, 0.92);
+      border-radius: 50%;
+      background: #fff;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(0,0,0,.24), inset 0 0 0 3px rgba(255,255,255,.12);
+    }
+    .emblem img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+      transform: scale(1.08);
+    }
+    .unit-avatar {
+      width: 78px;
+      height: 78px;
+      border-radius: 50%;
+      border: 2px solid rgba(255,255,255,.92);
+      background: #fff;
+      overflow: hidden;
+      flex-shrink: 0;
+      box-shadow: 0 8px 24px rgba(0,0,0,.18);
+    }
+    .unit-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+    }
+    .hero h1 {
+      font-size: 26px;
+      line-height: 1.15;
+      letter-spacing: 1px;
+    }
+    .hero p {
+      margin-top: 7px;
+      font-size: 14px;
+      color: #dceafd;
+    }
+    .hotline {
+      display: flex;
+      width: fit-content;
+      margin: 18px auto 0;
+      border: 1px solid #ffe49a;
+      background: linear-gradient(90deg, #ffd45d, var(--gold));
+      box-shadow: 0 8px 20px rgba(0,0,0,.16);
+    }
+    .nav-wrap {
+      box-shadow: 0 4px 18px rgba(9,47,91,.07);
+    }
+    .nav-tabs { max-width: 980px; padding: 12px 16px; }
+    .tab-btn {
+      border-radius: 10px;
+      border-color: #cdddea;
+      color: #2d4f70;
+      padding: 9px 13px;
+    }
+    .tab-btn.active {
+      background: var(--green);
+      box-shadow: 0 5px 14px rgba(20,93,160,.22);
+    }
+    .tab-btn.map-btn {
+      background: #fff8e7;
+      border-color: #edc764;
+      color: #7a5811;
+    }
+    .container { max-width: 980px; margin-top: 24px; }
+    .card {
+      border-radius: 18px;
+      border-color: var(--line);
+      box-shadow: var(--shadow);
+    }
+    .challenge-card {
+      position: relative;
+      overflow: hidden;
+      min-height: 196px;
+      padding: 28px 30px;
+      color: #fff;
+      background:
+        linear-gradient(125deg, rgba(9,47,91,.97), rgba(20,93,160,.92)),
+        #092f5b;
+    }
+    .challenge-card::after {
+      content: "CÔNG AN";
+      position: absolute;
+      right: 26px;
+      bottom: -18px;
+      color: rgba(255,255,255,.055);
+      font-size: 74px;
+      font-weight: 900;
+      letter-spacing: 6px;
+    }
+    .challenge-card .pill-label {
+      background: rgba(245,196,81,.16);
+      color: #ffe49a;
+      border: 1px solid rgba(245,196,81,.4);
+    }
+    .challenge-card h2 {
+      position: relative;
+      z-index: 1;
+      max-width: 690px;
+      font-size: 27px;
+      line-height: 1.25;
+    }
+    .challenge-card p {
+      position: relative;
+      z-index: 1;
+      max-width: 680px;
+      color: #dfeafa;
+    }
+    .btn-gold {
+      position: relative;
+      z-index: 1;
+      width: fit-content;
+      min-width: 300px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0,0,0,.16);
+    }
+    .section-head h3 {
+      color: var(--green-dark);
+      font-size: 20px;
+    }
+    .skill-item {
+      position: relative;
+      overflow: hidden;
+      border-radius: 16px;
+      border-color: var(--line);
+      padding: 18px 18px 18px 24px;
+    }
+    .skill-item::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 5px;
+      background: var(--gold);
+    }
+    .skill-item:hover {
+      border-color: var(--green);
+      box-shadow: 0 10px 24px rgba(20,93,160,.10);
+    }
+    .stats-bar {
+      border: 1px solid #c5d7e7;
+      background:
+        linear-gradient(90deg, rgba(233,242,251,.95), rgba(255,255,255,.95)),
+        #fff;
+      border-radius: 18px;
+    }
+    .filter-chip {
+      border-radius: 10px;
+      padding: 8px 14px;
+    }
+    .filter-chip.active {
+      background: var(--green);
+      border-color: var(--green);
+      color: #fff;
+    }
+    .post-card {
+      border-radius: 16px;
+      transition: transform .18s, box-shadow .18s;
+    }
+    .post-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 34px rgba(20,93,160,.14);
+    }
+    .post-card h4 { color: var(--green-dark); }
+    .read-btn {
+      border-radius: 9px;
+      background: var(--green);
+    }
+    .modal-box { border-top: 5px solid var(--green); }
+    footer {
+      background: #092f5b;
+      color: #d4e4f3;
+      border-top: 0;
+    }
+    footer a { color: #ffe49a; }
+    @media (max-width: 640px) {
+      .hero { text-align: center; }
+      .hero-head { justify-content: center; }
+      .emblem { width: 68px; height: 68px; }
+      .unit-avatar { width: 68px; height: 68px; }
+      .hero h1 { font-size: 19px; text-align: left; }
+      .challenge-card { padding: 24px 20px; }
+      .challenge-card h2 { font-size: 21px; }
+      .challenge-card::after { display: none; }
+      .btn-gold { width: 100%; min-width: 0; }
+      .stats-grid { grid-template-columns: repeat(3, 1fr); }
+    }
   </style>
 </head>
 <body>
   <header class="hero" id="trang-chu">
     <div class="hero-badge">PHONG TRÀO BÌNH DÂN HỌC VỤ SỐ — XÃ BỜ NGOONG</div>
     <div class="hero-head">
-      <div class="emblem" aria-hidden="true">★</div>
+      <div class="emblem" aria-label="Huy hiệu Công an nhân dân">
+        <img src="Screenshot%202026-11-24%20123139.png" alt="Huy hiệu Công an nhân dân">
+      </div>
+      <div class="unit-avatar" aria-label="Ảnh đại diện Công an xã Bờ Ngoong">
+        <img src="84e029e9-5834-48bd-9a77-b8a442ad11fd.jfif" alt="Công an xã Bờ Ngoong">
+      </div>
       <div>
         <h1>CÔNG AN XÃ BỜ NGOONG</h1>
         <p>Tuyên truyền pháp luật · Kỹ năng số · Phục vụ nhân dân</p>
       </div>
     </div>
-    <a class="hotline" href="tel:02693000000">☎ Trực ban hỗ trợ Công an xã Bờ Ngoong</a>
+    <a class="hotline" href="tel:02693502339">☎ Trực ban Công an xã: 0269 350 2339</a>
   </header>
 
   <div class="nav-wrap">
     <nav class="nav-tabs" aria-label="Điều hướng chính">
       <a class="tab-btn active" href="#trang-chu">Trang chủ</a>
       <a class="tab-btn" href="#thu-thach">Thử thách số</a>
+      <a class="tab-btn" href="contests.html">Cuộc thi</a>
       <a class="tab-btn" href="#ky-nang">4 Nhóm kỹ năng</a>
       <a class="tab-btn" href="#bai-viet">Cẩm nang &amp; Cảnh báo</a>
       <a id="map-link" class="tab-btn map-btn" href="#">📍 Bản đồ số Bờ Ngoong</a>
@@ -597,6 +852,68 @@
 
       var allPosts = [];
       var selectedCat = 'all';
+      var fallbackPosts = [
+        {
+          title: 'Nhận diện cuộc gọi giả danh Công an',
+          category: 'Cảnh báo lừa đảo',
+          summary: 'Cơ quan Công an không yêu cầu chuyển tiền qua điện thoại. Khi nghi ngờ, hãy tắt máy và xác minh trực tiếp.',
+          content: 'Cảnh giác khi người gọi tự xưng Công an, Công tố viên hoặc nhân viên Ngân hàng.\n\n• Không cung cấp mã OTP, mật khẩu, tài khoản ngân hàng.\n• Không nghe theo yêu cầu tải ứng dụng, quét mã QR hoặc chuyển tiền để giữ tài khoản.\n• Tắt máy, lưu lại số điện thoại và báo Công an xã Bờ Ngoong.'
+        },
+        {
+          title: 'Bảo vệ tài khoản Ngân hàng khi nhận tin nhắn lạ',
+          category: 'Cảnh báo lừa đảo',
+          summary: 'Mã OTP là thông tin bí mật tuyệt đối, không chia sẻ cho bất kỳ ai.',
+          content: 'Mã OTP được dùng để xác nhận giao dịch của chính chủ tài khoản.\n\n• Không đọc OTP cho người gọi điện, tin nhắn hoặc chat.\n• Không cài ứng dụng điều khiển điện thoại theo yêu cầu người lạ.\n• Khi nghi ngờ, khóa thẻ hoặc tài khoản qua số điện thoại chính thức của Ngân hàng.'
+        },
+        {
+          title: 'VNeID an toàn cho người dân',
+          category: 'Kỹ năng số & VNeID',
+          summary: 'Giữ kín mật khẩu, mã xác thực và chỉ sử dụng ứng dụng VNeID chính thức.',
+          content: 'Tài khoản VNeID gắn với thông tin cá nhân quan trọng.\n\n• Tải ứng dụng chỉ từ kho ứng dụng chính thức.\n• Không gửi hình màn hình tài khoản cho người lạ.\n• Không cung cấp mã xác thực cho người gọi hỗ trợ.\n• Liên hệ điểm hỗ trợ VNeID tại xã khi cần kích hoạt hoặc khôi phục tài khoản.'
+        },
+        {
+          title: 'Tránh mã QR giả và đường link lạ',
+          category: 'Cảnh báo lừa đảo',
+          summary: 'Không quét mã QR hoặc mở link chưa xác minh nguồn gốc.',
+          content: 'Mã QR có thể dẫn đến trang giả mạo để đánh cắp tài khoản và thông tin thanh toán.\n\n• Kiểm tra người gửi và mục đích trước khi quét mã.\n• Không quét mã tại nơi công cộng nếu không rõ nguồn gốc.\n• Kiểm tra kỹ tên miền và thông tin người thụ hưởng trước khi chuyển tiền.'
+        },
+        {
+          title: 'Không tải file APK ngoài kho ứng dụng',
+          category: 'Kỹ năng số & VNeID',
+          summary: 'File APK gửi qua Zalo hoặc tin nhắn có thể chứa mã độc.',
+          content: 'Kẻ gian thường gửi file APK giả danh phần mềm Ngân hàng, Công an hoặc hỗ trợ VNeID.\n\n• Chỉ tải ứng dụng trên Google Play, App Store hoặc website chính thức.\n• Không mở file .apk gửi qua tin nhắn người lạ.\n• Nếu đã cài nhầm, xóa ứng dụng, quét điện thoại và đổi mật khẩu.'
+        },
+        {
+          title: 'Cảnh giác mua hàng, đặt cọc trực tuyến',
+          category: 'Cảnh báo lừa đảo',
+          summary: 'Kiểm tra người bán và ưu tiên sàn thương mại có nguồn gốc rõ ràng.',
+          content: 'Trước khi mua hàng qua mạng:\n\n• Kiểm tra địa chỉ, số điện thoại, đánh giá và lịch sử người bán.\n• Không chuyển cọc toàn bộ cho tài khoản cá nhân mới.\n• Không tin hàng giá quá rẻ so với thị trường.\n• Giữ lại tin nhắn, hóa đơn và lịch sử giao dịch.'
+        },
+        {
+          title: 'Bảo vệ thông tin CCCD và giấy tờ cá nhân',
+          category: 'Tuyên truyền',
+          summary: 'Chỉ cung cấp CCCD và giấy tờ cho cơ quan, tổ chức có thẩm quyền.',
+          content: 'Giấy tờ cá nhân có thể bị lợi dụng để mở tài khoản, vay tiền hoặc giả danh.\n\n• Không gửi ảnh CCCD cho người lạ trên mạng xã hội.\n• Che khuôn mặt hoặc số giấy tờ nếu không thật sự cần thiết.\n• Không ký hoặc xác nhận hồ sơ trực tuyến khi chưa đọc kỹ nội dung.'
+        },
+        {
+          title: 'Xử lý khi nghi ngờ bị lừa đảo',
+          category: 'Tuyên truyền',
+          summary: 'Tắt máy, khóa tài khoản, lưu bằng chứng và báo ngân hàng, Công an.',
+          content: 'Khi phát hiện dấu hiệu bị lừa:\n\n• Dừng giao dịch và liên hệ Ngân hàng để khóa tài khoản, thẻ.\n• Lưu tin nhắn, số điện thoại, hình ảnh và lịch sử chuyển tiền.\n• Báo ngay Công an xã Bờ Ngoong để được hướng dẫn xử lý.\n• Không tiếp tục trao đổi hay thanh toán theo yêu cầu của đối tượng.'
+        },
+        {
+          title: 'An toàn trên mạng xã hội',
+          category: 'Kỹ năng số & VNeID',
+          summary: 'Hạn chế chia sẻ thông tin cá nhân và bật xác thực hai bước.',
+          content: 'Tài khoản mạng xã hội có thể bị chiếm đoạt để giả danh kêu gọi chuyển tiền.\n\n• Bật xác thực hai bước và kiểm tra thiết bị đăng nhập.\n• Không chia sẻ mã OTP hoặc mật khẩu.\n• Kiểm tra tin nhắn kêu gọi tiền từ người thân qua cuộc gọi trực tiếp.\n• Báo cáo tài khoản giả mạo và cảnh báo bạn bè.'
+        },
+        {
+          title: 'Công dân số Bờ Ngoong: 5 thói quen an toàn',
+          category: 'Tuyên truyền',
+          summary: 'Cảnh giác trước tin nhắn, xác minh nguồn tin và bảo vệ dữ liệu cá nhân.',
+          content: 'Mỗi người dân cần giữ 5 thói quen sau:\n\n1. Không cung cấp OTP hoặc mật khẩu.\n2. Không bấm link hoặc quét mã QR lạ.\n3. Không tải file APK ngoài kho ứng dụng chính thức.\n4. Luôn xác minh thông tin qua nguồn chính thống.\n5. Phản ánh kịp thời dấu hiệu lừa đảo tới Công an xã.'
+        }
+      ];
 
       function escapeHtml(text) {
         var div = document.createElement('div');
@@ -669,16 +986,21 @@
         renderPosts();
       });
 
+      allPosts = fallbackPosts;
+      renderPosts();
+      document.getElementById('stat-posts').textContent = allPosts.length;
+
       fetch(cfg.apiUrl + '?action=getPublicPosts')
         .then(function (res) { return res.json(); })
         .then(function (data) {
-          allPosts = (data && data.posts) || [];
+          allPosts = (data && data.posts && data.posts.length) ? data.posts : fallbackPosts;
           document.getElementById('stat-posts').textContent = allPosts.length;
           renderPosts();
         })
         .catch(function () {
-          document.getElementById('posts-list').innerHTML =
-            '<p style="color:#b91c1c;">Không tải được bài viết. Hãy kiểm tra lại quyền triển khai Web App.</p>';
+          allPosts = fallbackPosts;
+          document.getElementById('stat-posts').textContent = allPosts.length;
+          renderPosts();
         });
     })();
   </script>
